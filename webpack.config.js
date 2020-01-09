@@ -1,16 +1,16 @@
 var path = require("path");
 
-var BUILD_DIR = path.resolve(__dirname, "dist");
+var BUILD_DIR = path.resolve(__dirname, "example/js");
 var SRC_DIR = path.resolve(__dirname, "src");
 
 var config = {
   entry: {
-    app: SRC_DIR + "/index.js"
+    framework: SRC_DIR + "/index.js"
   },
 
   output: {
     path: BUILD_DIR,
-    filename: "[name].js"
+    filename: "[name].js",
   },
 
   module : {
