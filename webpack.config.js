@@ -11,6 +11,8 @@ var config = {
   output: {
     path: BUILD_DIR,
     filename: "[name].js",
+    library: "glfw",
+    libraryTarget: "umd"
   },
 
   module : {
