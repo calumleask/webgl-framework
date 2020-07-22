@@ -1,20 +1,34 @@
+import { Renderable } from "./renderable";
 
-export default class Scene {
+type SceneLayer = {
+    objectsToDraw: Renderable[];
+};
+
+type SceneLayers = {
+    [layerId: string]: SceneLayer;
+};
+
+export class Scene {
+    private _layers: SceneLayers;
 
     constructor() {
         this._layers = {};
-        this._globalUniforms = [];
+        // TODO: use
+        //this._globalUniforms = [];
     }
 
-    _getLayer(layerId) {
+    _getLayer(layerId: number | string): SceneLayer {
+        if (typeof layerId === "number") layerId = layerId.toString();
         return this._layers[layerId];
     }
 
-    _layerExists(layerId) {
+    _layerExists(layerId: number | string): boolean {
+        if (typeof layerId === "number") layerId = layerId.toString();
         return this._layers[layerId] !== undefined;
     }
 
-    _ensureLayer(layerId) {
+    _ensureLayer(layerId: number | string): SceneLayer {
+        if (typeof layerId === "number") layerId = layerId.toString();
         if (!this._layerExists(layerId)) {
             this._layers[layerId] = {
                 objectsToDraw: []
@@ -23,25 +37,26 @@ export default class Scene {
         return this._layers[layerId];
     }
 
-    _removeLayer(layerId) {
+    _removeLayer(layerId: number | string): void {
+        if (typeof layerId === "number") layerId = layerId.toString();
         if (this._layerExists(layerId)) {
             delete this._layers[layerId];
         }
     }
 
-    addObjectToLayer(layerId, object) {
+    addObjectToLayer<T extends Renderable>(layerId: number | string, object: T): void {
         const layer = this._ensureLayer(layerId);
         layer.objectsToDraw.push(object);
     }
 
-    addObjectsToLayer(layerId, objects) {
+    addObjectsToLayer<T extends Renderable>(layerId: number | string, objects: T[]): void {
         const layer = this._ensureLayer(layerId);
         objects.forEach(object => {
             layer.objectsToDraw.push(object);
         });
     }
 
-    removeObjectFromLayer(layerId, object) {
+    removeObjectFromLayer<T extends Renderable>(layerId: number | string, object: T): void {
         if (this._layerExists(layerId)) {
             const layer = this._getLayer(layerId);
             const index = layer.objectsToDraw.indexOf(object);
@@ -55,16 +70,16 @@ export default class Scene {
         }
     }
 
-    addGlobalUniform() {
+    addGlobalUniform(): void {
         // TODO
     }
 
     // Returns array of layer ids
-    getLayers() {
+    getLayerIds(): string[] {
         return Object.keys(this._layers);
     }
 
-    getObjectsToDrawForLayer(layerId) {
+    getObjectsToDrawForLayer(layerId: number | string): Renderable[] {
         if (this._layerExists(layerId)) {
             return this._getLayer(layerId).objectsToDraw;
         }

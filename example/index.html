@@ -11,7 +11,7 @@
     </head>
     <body>
         <canvas id="glCanvas" width="750" height="500"></canvas>
-        <script src="js/framework.js"></script>
+        <script src="../dist/framework.js"></script>
         <script>
             const canvas = new glfw.graphics.Canvas();
             const renderer = new glfw.graphics.Renderer();
@@ -22,13 +22,13 @@
             console.log(renderer);
             console.log(scene);
             console.log(square);
-            
+
             canvas.init("glCanvas");
 
             renderer.init(canvas);
 
             scene.addObjectToLayer(0, square);
-            
+
             renderer.render(canvas, scene);
         </script>
     </body>
