@@ -1,12 +1,12 @@
-import { math } from "~/math";
+import { Vec2, Vec3, Vec4 } from "~/math";
 import { Renderable, RenderableUniforms } from "./Renderable";
 
 
 
 export class Quad implements Renderable {
-    private _position: math.Vec2;
-    private _scale: math.Vec2;
-    private _color: math.Vec4;
+    private _position: Vec2;
+    private _scale: Vec2;
+    private _color: Vec4;
 
     constructor(x = 0, y = 0, w = 1, h = w) {
         this._position = [x, y];
@@ -22,11 +22,11 @@ export class Quad implements Renderable {
         };
     }
 
-    getPosition(): math.Vec2 {
+    getPosition(): Vec2 {
         return this._position;
     }
 
-    setPosition(position: math.Vec2): void {
+    setPosition(position: Vec2): void {
         this._position[0] = position[0];
         this._position[1] = position[1];
     }
@@ -47,18 +47,18 @@ export class Quad implements Renderable {
         this._scale[1] = h;
     }
 
-    getColorRGBA(): math.Vec4 {
+    getColorRGBA(): Vec4 {
         return this._color;
     }
 
-    setColorRGBA(rgba: math.Vec4): void {
+    setColorRGBA(rgba: Vec4): void {
         this._color[0] = rgba[0];
         this._color[1] = rgba[1];
         this._color[2] = rgba[2];
         this._color[3] = rgba[3];
     }
 
-    setColorRGB(rgb: math.Vec3): void {
+    setColorRGB(rgb: Vec3): void {
         this._color[0] = rgb[0];
         this._color[1] = rgb[1];
         this._color[2] = rgb[2];

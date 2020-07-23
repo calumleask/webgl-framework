@@ -1,11 +1,4 @@
-import { WebGLCanvas } from "./canvas";
-import { Renderer } from "./renderer";
-import { Scene } from "./scene";
-import { Quad } from "./quad";
-
-export const graphics = {
-    Canvas: WebGLCanvas,
-    Renderer: Renderer,
-    Scene: Scene,
-    Quad: Quad
-};
+export { WebGLCanvas as Canvas } from "./canvas";
+export { Renderer } from "./renderer";
+export { Scene } from "./scene";
+export { Quad } from "./quad";

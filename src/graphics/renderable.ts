@@ -1,10 +1,10 @@
-import { math } from "~/math";
+import { Vec2, Vec4 } from "~/math";
 import { Uniforms } from "./uniforms";
 
 export type RenderableUniforms = Uniforms & {
-    u_translation: math.Vec2;
-    u_scale: math.Vec2;
-    u_color: math.Vec4;
+    u_translation: Vec2;
+    u_scale: Vec2;
+    u_color: Vec4;
 };
 
 export interface Renderable {

@@ -1,5 +1,5 @@
-import { graphics } from "./graphics";
-import { math } from "./math";
+import * as graphics from "./graphics";
+import * as math from "./math";
 
 export {
     graphics,

@@ -1,4 +1,4 @@
-import { math } from "~/math";
+import { Vec2 } from "~/math";
 
 export class WebGLCanvas {
     private _canvas:  HTMLCanvasElement | null;
@@ -26,7 +26,7 @@ export class WebGLCanvas {
         return this._gl ?? null;
     }
 
-    getCanvasSizefv(): math.Vec2 {
+    getCanvasSizefv(): Vec2 {
         if (this._gl?.canvas) {
             return [this._gl.canvas.width, this._gl.canvas.height];
         }

@@ -1,4 +1,4 @@
-import { math } from "~/math";
+import { Vec2 } from "~/math";
 import { Uniforms } from "./uniforms";
 
 import { shaderSources } from "./shaders/sources/shader_sources";
@@ -49,7 +49,7 @@ type ProgramInfoWithVertexArray = {
 };
 
 type GlobalUniforms = Uniforms & {
-    u_resolution: math.Vec2;
+    u_resolution: Vec2;
 };
 
 type Attributes = {
