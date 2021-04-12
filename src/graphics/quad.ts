@@ -26,45 +26,51 @@ export class Quad implements Renderable {
         return this._position;
     }
 
-    setPosition(position: Vec2): void {
+    setPosition(position: Vec2): this {
         this._position[0] = position[0];
         this._position[1] = position[1];
+        return this;
     }
 
     getWidth(): number {
         return this._scale[0];
     }
 
-    setWidth(w: number): void {
+    setWidth(w: number): this {
         this._scale[0] = w;
+        return this;
     }
 
     getHeight(): number {
         return this._scale[1];
     }
 
-    setHeight(h: number): void {
+    setHeight(h: number): this {
         this._scale[1] = h;
+        return this;
     }
 
     getColorRGBA(): Vec4 {
         return this._color;
     }
 
-    setColorRGBA(rgba: Vec4): void {
+    setColorRGBA(rgba: Vec4): this {
         this._color[0] = rgba[0];
         this._color[1] = rgba[1];
         this._color[2] = rgba[2];
         this._color[3] = rgba[3];
+        return this;
     }
 
-    setColorRGB(rgb: Vec3): void {
+    setColorRGB(rgb: Vec3): this {
         this._color[0] = rgb[0];
         this._color[1] = rgb[1];
         this._color[2] = rgb[2];
+        return this;
     }
 
-    setAlpha(a: number): void {
+    setAlpha(a: number): this {
         this._color[3] = a;
+        return this;
     }
 }
