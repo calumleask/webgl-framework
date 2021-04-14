@@ -110,7 +110,7 @@ export class Renderer {
         };
     }
 
-    _createBuffers(glContext: WebGL2RenderingContext): Buffers | null {
+    private _createBuffers(glContext: WebGL2RenderingContext): Buffers | null {
         const positions = [
             0, 0,
             1, 0,
@@ -130,7 +130,7 @@ export class Renderer {
         };
     }
 
-    _createVAOAndSetAttributes(glContext: WebGL2RenderingContext, attribSetters: AttributeSetters, attribs: Attributes): WebGLVertexArrayObject | null  {
+    private _createVAOAndSetAttributes(glContext: WebGL2RenderingContext, attribSetters: AttributeSetters, attribs: Attributes): WebGLVertexArrayObject | null  {
         const vertexArrayObject = glContext.createVertexArray();
         if (!vertexArrayObject) return null;
         glContext.bindVertexArray(vertexArrayObject);
@@ -158,7 +158,7 @@ export class Renderer {
         return vertexArrayObject;
     }
 
-    _setUniforms(glContext: WebGL2RenderingContext, programInfo: ProgramInfo, uniforms: Uniforms): void {
+    private _setUniforms(glContext: WebGL2RenderingContext, programInfo: ProgramInfo, uniforms: Uniforms): void {
         Object.keys(uniforms).forEach(name => {
             const uniformSetter = programInfo.uniformSetters[name];
             if (uniformSetter) {

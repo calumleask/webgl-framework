@@ -22,7 +22,7 @@ export class WebGLCanvas {
         }
     }
 
-    getContext(): WebGL2RenderingContext | null{
+    getContext(): WebGL2RenderingContext | null {
         return this._gl ?? null;
     }
 

@@ -54,7 +54,7 @@ export class Program {
         };
     }
 
-    _createProgram(glContext: WebGL2RenderingContext, vertexShader: WebGLShader, fragmentShader: WebGLShader): WebGLProgram | null {
+    private _createProgram(glContext: WebGL2RenderingContext, vertexShader: WebGLShader, fragmentShader: WebGLShader): WebGLProgram | null {
         const program = glContext.createProgram();
         if (!program) return null;
         glContext.attachShader(program, vertexShader);
@@ -71,7 +71,7 @@ export class Program {
         return null;
     }
 
-    _createAttribSetters(glContext: WebGL2RenderingContext, program: WebGLProgram): AttributeSetters {
+    private _createAttribSetters(glContext: WebGL2RenderingContext, program: WebGLProgram): AttributeSetters {
         const attribSetters: AttributeSetters = {};
         const attribCount = glContext.getProgramParameter(program, glContext.ACTIVE_ATTRIBUTES);
         console.log(attribCount, "attribs");
@@ -88,7 +88,7 @@ export class Program {
         return attribSetters;
     }
 
-    _createUniformSetters(glContext: WebGL2RenderingContext, program: WebGLProgram): UniformSetters {
+    private _createUniformSetters(glContext: WebGL2RenderingContext, program: WebGLProgram): UniformSetters {
         const uniformSetters: UniformSetters = {};
         const uniformCount = glContext.getProgramParameter(program, glContext.ACTIVE_UNIFORMS);
         console.log(uniformCount, "uniforms");

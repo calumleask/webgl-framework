@@ -17,17 +17,17 @@ export class Scene {
         //this._globalUniforms = [];
     }
 
-    _getLayer(layerId: number | string): SceneLayer {
+    private _getLayer(layerId: number | string): SceneLayer {
         if (typeof layerId === "number") layerId = layerId.toString();
         return this._layers[layerId];
     }
 
-    _layerExists(layerId: number | string): boolean {
+    private _layerExists(layerId: number | string): boolean {
         if (typeof layerId === "number") layerId = layerId.toString();
         return this._layers[layerId] !== undefined;
     }
 
-    _ensureLayer(layerId: number | string): SceneLayer {
+    private _ensureLayer(layerId: number | string): SceneLayer {
         if (typeof layerId === "number") layerId = layerId.toString();
         if (!this._layerExists(layerId)) {
             this._layers[layerId] = {
@@ -37,7 +37,7 @@ export class Scene {
         return this._layers[layerId];
     }
 
-    _removeLayer(layerId: number | string): void {
+    private _removeLayer(layerId: number | string): void {
         if (typeof layerId === "number") layerId = layerId.toString();
         if (this._layerExists(layerId)) {
             delete this._layers[layerId];
