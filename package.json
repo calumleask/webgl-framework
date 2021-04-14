@@ -1,15 +1,16 @@
 {
   "name": "webgl-framework",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A WebGL Framework",
-  "main": "src/index.js",
+  "main": "src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --ext .js,.ts src -c .eslintrc",
     "clean": "rm -rf dist",
-    "dev:build": "webpack --config webpack.dev.js",
-    "dev:watch": "webpack --config webpack.dev.js --watch",
-    "prod:build": "webpack --config webpack.prod.js"
+    "start": "webpack --config webpack.dev.js --watch",
+    "dev": "webpack --config webpack.dev.js",
+    "prod": "webpack --config webpack.prod.js",
+    "docs": "sh ./scripts/generate_docs.sh"
   },
   "author": "Calum Leask",
   "devDependencies": {
@@ -25,6 +26,9 @@
     "clean-webpack-plugin": "^3.0.0",
     "eslint": "^7.24.0",
     "terser-webpack-plugin": "^5.1.1",
+    "typedoc": "^0.20.35",
+    "typedoc-plugin-external-module-name": "^4.0.6",
+    "typedoc-plugin-markdown": "^3.6.1",
     "typescript": "^4.2.4",
     "webpack": "^5.32.0",
     "webpack-cli": "^4.6.0",
