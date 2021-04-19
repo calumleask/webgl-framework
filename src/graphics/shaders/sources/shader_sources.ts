@@ -7,16 +7,16 @@ import { texturedFragmentSource } from "./fragment/textured";
 
 // TODO: create a method
 export const shaderSources = {
-    basic: {
-        vertex: basicVertexSource,
-        fragment: basicFragmentSource
-    },
-    colored: {
-        vertex: basicVertexSource,
-        fragment: coloredFragmentSource
-    },
-    textured: {
-        vertex: texturedVertexSource,
-        fragment: texturedFragmentSource
-    }
+  basic: {
+    vertex: basicVertexSource,
+    fragment: basicFragmentSource
+  },
+  colored: {
+    vertex: basicVertexSource,
+    fragment: coloredFragmentSource
+  },
+  textured: {
+    vertex: texturedVertexSource,
+    fragment: texturedFragmentSource
+  }
 };
