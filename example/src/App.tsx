@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, HashRouter as Router, Route, Switch } from "react-router-dom";
 
-import * as Example from "./examples";
+import * as examples from "./examples";
 
 import "./index.css";
 
@@ -32,14 +32,23 @@ const App: React.FC = () => {
               <>
                 <h2 style={{ marginLeft: "10px" }}>{"Examples"}</h2>
                 <div style={{ display: "flex", flexDirection: "column", marginLeft: "10px" }}>
+                  <h3>{"WebGL2"}</h3>
                   <h4>{"2D"}</h4>
-                  <Link to={"/2d/colored-quad"}>{"Colored Quad"}</Link>
+                  <Link to={"/webgl2/2d/colored-quad"}>{"Colored Quad"}</Link>
+                  <h3>{"WebGPU"}</h3>
+                  <h4>{"2D"}</h4>
+                  <Link to={"/webgpu/2d/colored-quad"}>{"Colored Quad"}</Link>
                 </div>
               </>
             );
           }}/>
+          {/*** WebGL2 ***/}
           {/* Basic */}
-          <Route exact path={"/2d/colored-quad"} render={(): React.ReactElement => <ExampleWrapper title={"Colored Quad"} Component={Example.ColoredQuad}/>}/>
+          <Route exact path={"/webgl2/2d/colored-quad"} render={(): React.ReactElement => <ExampleWrapper title={"Colored Quad"} Component={examples.webgl2.ColoredQuad}/>}/>
+
+          {/*** WebGL2 ***/}
+          {/* Basic */}
+          <Route exact path={"/webgpu/2d/colored-quad"} render={(): React.ReactElement => <ExampleWrapper title={"Colored Quad"} Component={examples.webgpu.ColoredQuad}/>}/>
         </Switch>
       </Router>
     </div>
