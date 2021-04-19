@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Vec2 } from "../math";
+import { Vec2 } from "../../math";
 
 export class WebGLCanvas {
   private _canvas:  HTMLCanvasElement | null;

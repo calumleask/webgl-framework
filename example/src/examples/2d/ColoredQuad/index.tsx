@@ -5,10 +5,10 @@ import * as glfw from "webgl-framework";
 export const ColoredQuadExample: React.FC = () => {
 
   useEffect(() => {
-    const canvas = new glfw.graphics.Canvas();
-    const renderer = new glfw.graphics.Renderer();
-    const scene = new glfw.graphics.Scene();
-    const square = new glfw.graphics.Quad(100, 100, 100, 100);
+    const canvas = new glfw.graphics.webgl2.Canvas();
+    const renderer = new glfw.graphics.webgl2.Renderer();
+    const scene = new glfw.graphics.webgl2.Scene();
+    const square = new glfw.graphics.webgl2.Quad(100, 100, 100, 100);
 
     console.log(canvas);
     console.log(renderer);

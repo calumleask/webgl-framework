@@ -1,4 +1,1 @@
-export { WebGLCanvas as Canvas } from "./canvas";
-export { Renderer } from "./renderer";
-export { Scene } from "./scene";
-export { Quad } from "./quad";
+export * as webgl2 from "./webgl2";

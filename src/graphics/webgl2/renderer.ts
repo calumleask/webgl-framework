@@ -1,16 +1,11 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Vec2 } from "../math";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Vec2 } from "../../math";
 import { Uniforms } from "./uniforms";
 
 import { shaderSources } from "./shaders/sources/shader_sources";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Program, ProgramInfo, AttributeSetters } from "./shaders/program";
 
 // TODO: move
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { WebGLCanvas as Canvas } from "./canvas";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Scene } from "./scene";
 
 // TODO: shaders and program created externally.
