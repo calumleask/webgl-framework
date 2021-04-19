@@ -17,7 +17,7 @@ export class WebGPUCanvas {
 
     // Only continue if WebGPU is available and working
     if (!this._context) {
-      throw Error("Unable to initialize WebGPU. Your browser or machine may not support it.");
+      throw Error("Unable to initialize WebGPU. It may not be supported/enabled in your browser.");
     }
   }
 
