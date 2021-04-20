@@ -1,3 +1,4 @@
+import { Vec2 } from "../../math";
 
 export class WebGPUCanvas {
   private _canvas:  HTMLCanvasElement | null;
@@ -23,5 +24,12 @@ export class WebGPUCanvas {
 
   getContext(): GPUCanvasContext | null {
     return this._context;
+  }
+
+  getCanvasSizefv(): Vec2 {
+    if (this._canvas) {
+      return [this._canvas.width, this._canvas.height];
+    }
+    return [-1, -1];
   }
 }

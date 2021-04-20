@@ -7,22 +7,17 @@ export const ColoredQuadExample: React.FC = () => {
   useEffect(() => {
     const canvas = new glfw.graphics.webgpu.Canvas();
     const renderer = new glfw.graphics.webgpu.Renderer();
-    // const scene = new glfw.graphics.webgpu.Scene();
-    // const square = new glfw.graphics.webgpu.Quad(100, 100, 100, 100);
-
-    console.log(canvas);
-    console.log(renderer);
-    // console.log(scene);
-    // console.log(square);
+    const scene = new glfw.graphics.webgpu.Scene();
+    const cube = new glfw.graphics.webgpu.Cube(100, 100, 100, 100);
 
     canvas.init("glCanvas");
 
     renderer.init(canvas);
 
-    // scene.addObjectToLayer(0, square);
+    scene.addObjectToLayer(0, cube);
 
     const frame = (): void => {
-      renderer.render();
+      renderer.render(scene);
       requestAnimationFrame(frame);
     };
     requestAnimationFrame(frame);
