@@ -1,82 +1,41 @@
 import { Renderable } from "./renderable";
-
-type SceneLayer = {
-    objectsToDraw: Renderable[];
-};
-
-type SceneLayers = {
-    [layerId: string]: SceneLayer;
-};
+import { Renderer } from "./renderer";
 
 export class Scene {
-    private _layers: SceneLayers;
+  private _renderables: Renderable[];
 
-    constructor() {
-      this._layers = {};
+  constructor() {
+    this._renderables = [];
+  }
+
+  addRenderable(renderable: Renderable): void {
+    this._renderables.push(renderable);
+  }
+
+  addRenderables(renderables: Renderable[]): void {
+    this._renderables.push(...renderables);
+  }
+
+  removeRenderable(renderable: Renderable): void {
+    const index = this._renderables.indexOf(renderable);
+    if (index === -1) {
+      this._renderables.splice(index, 1);
     }
+  }
 
-    private _getLayer(layerId: number | string): SceneLayer {
-      if (typeof layerId === "number") layerId = layerId.toString();
-      return this._layers[layerId];
-    }
+  getRenderables(): Renderable[] {
+    return this._renderables;
+  }
 
-    private _layerExists(layerId: number | string): boolean {
-      if (typeof layerId === "number") layerId = layerId.toString();
-      return this._layers[layerId] !== undefined;
-    }
+  /** @internal */
+  _release(): void {
+    // TODO
+  }
 
-    private _ensureLayer(layerId: number | string): SceneLayer {
-      if (typeof layerId === "number") layerId = layerId.toString();
-      if (!this._layerExists(layerId)) {
-        this._layers[layerId] = {
-          objectsToDraw: []
-        };
-      }
-      return this._layers[layerId];
-    }
-
-    private _removeLayer(layerId: number | string): void {
-      if (typeof layerId === "number") layerId = layerId.toString();
-      if (this._layerExists(layerId)) {
-        delete this._layers[layerId];
-      }
-    }
-
-    addObjectToLayer<T extends Renderable>(layerId: number | string, object: T): void {
-      const layer = this._ensureLayer(layerId);
-      layer.objectsToDraw.push(object);
-    }
-
-    addObjectsToLayer<T extends Renderable>(layerId: number | string, objects: T[]): void {
-      const layer = this._ensureLayer(layerId);
-      objects.forEach(object => {
-        layer.objectsToDraw.push(object);
-      });
-    }
-
-    removeObjectFromLayer<T extends Renderable>(layerId: number | string, object: T): void {
-      if (this._layerExists(layerId)) {
-        const layer = this._getLayer(layerId);
-        const index = layer.objectsToDraw.indexOf(object);
-        if (index === -1) {
-          layer.objectsToDraw.splice(index, 1);
-        }
-
-        if (layer.objectsToDraw.length === 0) {
-          this._removeLayer(layerId);
-        }
-      }
-    }
-
-    // Returns array of layer ids
-    getLayerIds(): string[] {
-      return Object.keys(this._layers);
-    }
-
-    getObjectsToDrawForLayer(layerId: number | string): Renderable[] {
-      if (this._layerExists(layerId)) {
-        return this._getLayer(layerId).objectsToDraw;
-      }
-      return [];
-    }
+  /** @internal */
+  _setup(renderer: Renderer): void {
+    this._renderables.forEach(renderable => {
+      renderable._setupBuffers(renderer);
+    });
+  }
 }

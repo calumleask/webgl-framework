@@ -18,7 +18,8 @@ export class WebGLCanvas {
 
     // Only continue if WebGL is available and working
     if (!this._gl) {
-      throw Error("Unable to initialize WebGL2. Your browser or machine may not support it.");
+      console.error("Unable to initialize WebGL2. Your browser or machine may not support it.");
+      return;
     }
   }
 

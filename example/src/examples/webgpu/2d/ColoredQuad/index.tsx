@@ -6,15 +6,17 @@ export const ColoredQuadExample: React.FC = () => {
 
   useEffect(() => {
     const canvas = new glfw.graphics.webgpu.Canvas();
-    const renderer = new glfw.graphics.webgpu.Renderer();
     const scene = new glfw.graphics.webgpu.Scene();
-    const cube = new glfw.graphics.webgpu.Cube(100, 100, 100, 100);
+
+    const cubeMesh = new glfw.graphics.webgpu.CubeMesh();
+    const basicMaterial = new glfw.graphics.webgpu.BasicMaterial();
+    const renderable = new glfw.graphics.webgpu.Renderable(cubeMesh, basicMaterial);
 
     canvas.init("glCanvas");
 
-    renderer.init(canvas);
+    const renderer = new glfw.graphics.webgpu.Renderer(canvas);
 
-    scene.addObjectToLayer(0, cube);
+    scene.addRenderable(renderable);
 
     const frame = (): void => {
       renderer.render(scene);

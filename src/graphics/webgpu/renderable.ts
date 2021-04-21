@@ -1,16 +1,24 @@
 import { mat4, vec3 } from "gl-matrix";
 
-import { Pipeline } from "./pipeline";
+import { Material } from "./material";
+import { Mesh } from "./mesh";
+import { Renderer } from "./renderer";
 
 const matrixSize = 4 * 16;
 
-export abstract class Renderable {
+export class Renderable {
+  private _mesh: Mesh;
+  private _material: Material;
+
   private _uniformBindGroup: GPUBindGroup | null;
 
   private _modelMatrix: mat4;
   private _modelViewProjectionMatrix: Float32Array;
 
-  constructor() {
+  constructor(mesh: Mesh, material: Material) {
+    this._mesh = mesh;
+    this._material = material;
+
     this._modelMatrix = mat4.create();
     mat4.translate(this._modelMatrix, this._modelMatrix, vec3.fromValues(-2, 0, 0));
     this._modelViewProjectionMatrix = mat4.create() as Float32Array;
@@ -18,7 +26,13 @@ export abstract class Renderable {
     this._uniformBindGroup = null;
   }
 
-  abstract getVertexCount(): number;
+  getMesh(): Mesh {
+    return this._mesh;
+  }
+
+  getMaterial(): Material {
+    return this._material;
+  }
 
   getUniformBindGroup(): GPUBindGroup | null {
     return this._uniformBindGroup;
@@ -26,10 +40,6 @@ export abstract class Renderable {
 
   getModelViewProjectionMatrix(): Float32Array {
     return this._modelViewProjectionMatrix;
-  }
-
-  assignMaterial(pipeline: Pipeline): void {
-    pipeline.addPipeline(this);
   }
 
   updateMatrix(viewMatrix: mat4, projectionMatrix: mat4): void {
@@ -53,12 +63,13 @@ export abstract class Renderable {
   }
 
   /** @internal */
-  _createBindGroup(device: GPUDevice, pipeline: Pipeline): void {
+  _setupBuffers(renderer: Renderer): void {
+    this._mesh._createVertexBuffer(renderer);
+    const device = renderer._getDevice();
+    const renderPipeline = this._material._createPipeline(device);
+    const uniformBuffer = this._material._createUniformBuffer(device);
+
     if (this._uniformBindGroup) return;
-    const renderPipeline = pipeline.getRenderPipeline();
-    if (!renderPipeline) return;
-    const uniformBuffer = pipeline.getUniformBuffer();
-    if (!uniformBuffer) return;
     this._uniformBindGroup = device.createBindGroup({
       layout: renderPipeline.getBindGroupLayout(0),
       entries: [
@@ -73,4 +84,5 @@ export abstract class Renderable {
       ],
     });
   }
+
 }
