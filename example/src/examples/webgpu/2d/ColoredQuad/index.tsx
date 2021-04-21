@@ -14,12 +14,14 @@ export const ColoredQuadExample: React.FC = () => {
 
     canvas.init("glCanvas");
 
+    const camera = new glfw.graphics.webgpu.Camera(75, canvas.getAspect());
+
     const renderer = new glfw.graphics.webgpu.Renderer(canvas);
 
     scene.addRenderable(renderable);
 
     const frame = (): void => {
-      renderer.render(scene);
+      renderer.render(scene, camera);
       requestAnimationFrame(frame);
     };
     requestAnimationFrame(frame);

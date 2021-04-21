@@ -33,4 +33,11 @@ export class WebGPUCanvas {
     }
     return [-1, -1];
   }
+
+  getAspect(): number {
+    if (this._canvas) {
+      return this._canvas.width / this._canvas.height;
+    }
+    return 1;
+  }
 }

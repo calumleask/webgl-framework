@@ -1,8 +1,8 @@
-import { mat4, vec3 } from "gl-matrix";
 
 // TODO: move
 import { WebGPUCanvas as Canvas } from "./canvas";
 import { MeshDataBuffers } from "./meshDataBuffers";
+import { Camera } from "./camera";
 import { Scene } from "./scene";
 
 export class Renderer {
@@ -15,17 +15,10 @@ export class Renderer {
 
   private _ready: boolean;
 
-  // TODO: move to camera
-  private _viewMatrix: mat4;
-  private _projectionMatrix: mat4;
-
   private _activeScene: Scene | null;
 
   constructor(canvas: Canvas) {
     this._activeScene = null;
-
-    this._viewMatrix = mat4.create();
-    this._projectionMatrix = mat4.create();
 
     this._ready = false;
 
@@ -72,13 +65,6 @@ export class Renderer {
       .catch((err) => {
         console.error(err);
       });
-
-    // TODO: move to camera
-    mat4.translate(this._viewMatrix, this._viewMatrix, vec3.fromValues(0, 0, -7));
-
-    const aspect = Math.abs(canvas.getCanvasSizefv()[0] / canvas.getCanvasSizefv()[1]);
-    this._projectionMatrix = mat4.create();
-    mat4.perspective(this._projectionMatrix, (2 * Math.PI) / 5, aspect, 1, 100.0);
   }
 
   /** @internal */
@@ -125,18 +111,15 @@ export class Renderer {
     return this._dataBuffers;
   }
 
-  render(scene: Scene): void {
+  render(scene: Scene, camera: Camera): void {
     if (!this._ready) return;
     this._initScene(scene);
 
-    scene.getRenderables().forEach(renderable => {
-      // TODO: pass camera?
-      renderable.updateMatrix(this._viewMatrix, this._projectionMatrix);
-    });
+    const viewMatrix = camera.getViewMatrix();
+    const projectionMatrix = camera.getProjectionMatrix();
 
     scene.getRenderables().forEach(renderable => {
-      // TODO: pass camera?
-      renderable.updateMatrix(this._viewMatrix, this._projectionMatrix);
+      renderable.updateMatrix(viewMatrix, projectionMatrix);
     });
 
     scene.getRenderables().forEach(renderable => {
