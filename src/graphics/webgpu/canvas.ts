@@ -23,6 +23,10 @@ export class WebGPUCanvas {
     }
   }
 
+  getElement(): HTMLCanvasElement | null {
+    return this._canvas;
+  }
+
   getContext(): GPUCanvasContext | null {
     return this._context;
   }
