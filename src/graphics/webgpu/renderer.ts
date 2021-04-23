@@ -122,41 +122,47 @@ export class Renderer {
       renderable.updateMatrix(viewMatrix, projectionMatrix);
     });
 
-    scene.getRenderables().forEach(renderable => {
-      const modelViewProjectionMatrix = renderable.getModelViewProjectionMatrix();
-      if (!modelViewProjectionMatrix) return;
-      const uniformBuffer = renderable.getMaterial().getUniformBuffer();
-      if (!uniformBuffer) return;
-      this._device?.queue.writeBuffer(
-        uniformBuffer,
-        0,
-        modelViewProjectionMatrix.buffer,
-        modelViewProjectionMatrix.byteOffset,
-        modelViewProjectionMatrix.byteLength
-      );
-    });
-
     this._renderPassDesc.colorAttachments[0].view = this._swapChain.getCurrentTexture().createView();
 
     const commandEncoder = this._device.createCommandEncoder();
+    // TODO: Is this per material?
     const passEncoder = commandEncoder.beginRenderPass(this._renderPassDesc);
 
-    scene.getRenderables().forEach(renderable => {
-      const renderPipeline = renderable.getMaterial().getRenderPipeline();
+    for (const [material, renderables] of scene.getSharedMaterialRenderables()) {
+
+      const uniformBuffer = material.getUniformBuffer();
+      if (!uniformBuffer) return;
+
+      const renderPipeline = material.getRenderPipeline();
       if (!renderPipeline) return;
       passEncoder.setPipeline(renderPipeline);
 
-      const dataBuffer = this._dataBuffers.getBuffer(renderable.getMesh().getVertexBufferId());
-      if (!dataBuffer) return;
-      passEncoder.setVertexBuffer(0, dataBuffer);
+      renderables.forEach((renderable) => {
+        const modelViewProjectionMatrix = renderable.getModelViewProjectionMatrix();
+        if (!modelViewProjectionMatrix) return;
 
-      const uniformBindGroup = renderable.getUniformBindGroup();
-      if (!uniformBindGroup) return;
+        this._device?.queue.writeBuffer(
+          uniformBuffer,
+          0,
+          modelViewProjectionMatrix.buffer,
+          modelViewProjectionMatrix.byteOffset,
+          modelViewProjectionMatrix.byteLength
+        );
 
-      passEncoder.setBindGroup(0, uniformBindGroup);
-      passEncoder.draw(renderable.getMesh().getVertexCount(), 1, 0, 0);
-    });
+        const dataBuffer = this._dataBuffers.getBuffer(renderable.getMesh().getVertexBufferId());
+        if (!dataBuffer) return;
+        passEncoder.setVertexBuffer(0, dataBuffer);
 
+        const uniformBindGroup = renderable.getUniformBindGroup();
+        if (!uniformBindGroup) return;
+
+        passEncoder.setBindGroup(0, uniformBindGroup);
+        passEncoder.draw(renderable.getMesh().getVertexCount(), 1, 0, 0);
+      });
+
+    }
+
+    // TODO: Is this per material?
     passEncoder.endPass();
 
     this._device.queue.submit([commandEncoder.finish()]);
