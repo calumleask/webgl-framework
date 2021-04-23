@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 
-import { glMatrix, graphics } from "webgl-framework";
+import { graphics } from "webgl-framework";
+import { vec3 } from "gl-matrix";
 
 export const MovingCameraFixedFocalPointExample: React.FC = () => {
 
@@ -22,29 +23,29 @@ export const MovingCameraFixedFocalPointExample: React.FC = () => {
       if (e.repeat) return;
       switch (e.key) {
       case "w": {
-        camera.setPosition(glMatrix.vec3.add(glMatrix.vec3.create(), camera.getPosition(), camera.getForwardVector()));
+        camera.move(camera.getForwardVector());
         break;
       }
       case "s": {
-        camera.setPosition(glMatrix.vec3.add(glMatrix.vec3.create(), camera.getPosition(), camera.getForwardVector()));
+        camera.move(vec3.scale(vec3.create(), camera.getForwardVector(), -1));
         break;
       }
       case "a":
       case "ArrowLeft": {
-        camera.setX(camera.getX() - 1);
+        camera.move([-1, 0, 0]);
         break;
       }
       case "d":
       case "ArrowRight": {
-        camera.setX(camera.getX() + 1);
+        camera.move([1, 0, 0]);
         break;
       }
       case "ArrowUp": {
-        camera.setY(camera.getY() + 1);
+        camera.move(camera.getUpVector());
         break;
       }
       case "ArrowDown": {
-        camera.setY(camera.getY() - 1);
+        camera.move(vec3.scale(vec3.create(), camera.getUpVector(), -1));
         break;
       }
       default: break;

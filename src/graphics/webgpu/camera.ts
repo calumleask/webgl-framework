@@ -10,6 +10,8 @@ export class Camera {
 
   private _usingFixedFocalPoint: boolean;
 
+  private _dirty: boolean;
+
   constructor(fovDeg: number, aspect: number, near = 1, far = 100.0) {
     this._position = vec3.create();
     this._focalPoint = vec3.create();
@@ -18,17 +20,21 @@ export class Camera {
     this._viewMatrix = mat4.create();
     this._projectionMatrix = mat4.create();
     this._usingFixedFocalPoint = false;
+    this._dirty = false;
 
     const fovRad = fovDeg * Math.PI / 180;
     mat4.perspective(this._projectionMatrix, fovRad, aspect, near, far);
-    console.log(this._projectionMatrix);
-
 
     vec3.set(this._forward, 0, 0, -1);
     vec3.set(this._up, 0, 1, 0);
+
+    this._updateViewMatrix();
   }
 
   getViewMatrix(): mat4 {
+    if (this._dirty) {
+      this._updateViewMatrix();
+    }
     return this._viewMatrix;
   }
 
@@ -40,9 +46,15 @@ export class Camera {
     return vec3.clone(this._position);
   }
 
-  setPosition(position: vec3): this {
-    vec3.set(this._forward, position[0], position[1], position[2]);
-    this._updateViewMatrix();
+  setPosition(pos: vec3): this {
+    vec3.copy(this._position, pos);
+    this._dirty = true;
+    return this;
+  }
+
+  move(vec: vec3): this {
+    vec3.add(this._position, this._position, vec);
+    this._dirty = true;
     return this;
   }
 
@@ -52,7 +64,7 @@ export class Camera {
 
   setX(x: number): this {
     this._position[0] = x;
-    this._updateViewMatrix();
+    this._dirty = true;
     return this;
   }
 
@@ -62,7 +74,7 @@ export class Camera {
 
   setY(y: number): this {
     this._position[1] = y;
-    this._updateViewMatrix();
+    this._dirty = true;
     return this;
   }
 
@@ -72,13 +84,14 @@ export class Camera {
 
   setZ(z: number): this {
     this._position[2] = z;
-    this._updateViewMatrix();
+    this._dirty = true;
     return this;
   }
 
   setFocalPoint(vec: vec3): this {
     this._usingFixedFocalPoint = true;
-    this._focalPoint = vec3.set(vec3.create(), vec[0], vec[1], vec[2]);
+    vec3.copy(this._focalPoint, vec);
+    this._dirty = true;
     return this;
   }
 
@@ -86,10 +99,10 @@ export class Camera {
     return this._forward;
   }
 
-  setForwardVector(vec: vec3): this {
+  setForwardVector(forward: vec3): this {
     this._usingFixedFocalPoint = false;
-    vec3.set(this._forward, vec[0], vec[1], vec[2]);
-    this._updateViewMatrix();
+    this._forward = this._normalize(forward);
+    this._dirty = true;
     return this;
   }
 
@@ -97,23 +110,33 @@ export class Camera {
     return this._up;
   }
 
-  getRightVector(): vec3 {
-    // TODO
-    return this._up;
+  setUpVector(up: vec3): this {
+    this._up = this._normalize(up);
+    this._dirty = true;
+    return this;
   }
 
-  setUpVector(vec: vec3): this {
-    vec3.set(this._up, vec[0], vec[1], vec[2]);
-    this._updateViewMatrix();
-    return this;
+  getRightVector(): vec3 {
+    return this._normalize(vec3.cross(vec3.create(), this._forward, this._up));
   }
 
   /** @internal */
   private _updateViewMatrix(): void {
-    if (!this._usingFixedFocalPoint) {
+    if (this._usingFixedFocalPoint) {
+      // Update forward vector
+      this._forward = this._normalize(vec3.subtract(vec3.create(), this._focalPoint, this._position));
+    }
+    else {
+      // Update focal point
       vec3.add(this._focalPoint, this._position, this._forward);
     }
     mat4.lookAt(this._viewMatrix, this._position, this._focalPoint, this._up);
+    this._dirty = true;
+  }
+
+  /** @internal */
+  private _normalize(vec: vec3): vec3 {
+    return vec3.normalize(vec3.create(), vec);
   }
 
 }

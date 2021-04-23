@@ -1,49 +1,50 @@
 import React, { useEffect } from "react";
 
-import * as glfw from "webgl-framework";
+import { graphics } from "webgl-framework";
+import { vec3 } from "gl-matrix";
 
 export const MovingCameraExample: React.FC = () => {
 
   useEffect(() => {
-    const canvas = new glfw.graphics.webgpu.Canvas("glCanvas");
-    const renderer = new glfw.graphics.webgpu.Renderer(canvas);
+    const canvas = new graphics.webgpu.Canvas("glCanvas");
+    const renderer = new graphics.webgpu.Renderer(canvas);
 
-    const camera = new glfw.graphics.webgpu.Camera(75, canvas.getAspect())
+    const camera = new graphics.webgpu.Camera(75, canvas.getAspect())
       .setZ(10);
 
-    const scene = new glfw.graphics.webgpu.Scene();
-    const cubeMesh = new glfw.graphics.webgpu.CubeMesh();
-    const basicMaterial = new glfw.graphics.webgpu.BasicMaterial();
-    const renderable = new glfw.graphics.webgpu.Renderable(cubeMesh, basicMaterial);
+    const scene = new graphics.webgpu.Scene();
+    const cubeMesh = new graphics.webgpu.CubeMesh();
+    const basicMaterial = new graphics.webgpu.BasicMaterial();
+    const renderable = new graphics.webgpu.Renderable(cubeMesh, basicMaterial);
     scene.addRenderable(renderable);
 
     window.addEventListener("keydown", (e) => {
       if (e.repeat) return;
       switch (e.key) {
       case "w": {
-        camera.setZ(camera.getZ() - 1);
+        camera.move(camera.getForwardVector());
         break;
       }
       case "s": {
-        camera.setZ(camera.getZ() + 1);
+        camera.move(vec3.scale(vec3.create(), camera.getForwardVector(), -1));
         break;
       }
       case "a":
       case "ArrowLeft": {
-        camera.setX(camera.getX() - 1);
+        camera.move(vec3.scale(vec3.create(), camera.getRightVector(), -1));
         break;
       }
       case "d":
       case "ArrowRight": {
-        camera.setX(camera.getX() + 1);
+        camera.move(camera.getRightVector());
         break;
       }
       case "ArrowUp": {
-        camera.setY(camera.getY() + 1);
+        camera.move(camera.getUpVector());
         break;
       }
       case "ArrowDown": {
-        camera.setY(camera.getY() - 1);
+        camera.move(vec3.scale(vec3.create(), camera.getUpVector(), -1));
         break;
       }
       default: break;
