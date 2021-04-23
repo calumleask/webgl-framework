@@ -36,8 +36,10 @@ const App: React.FC = () => {
                   <h4>{"2D"}</h4>
                   <Link to={"/webgl2/2d/colored-quad"}>{"Colored Quad"}</Link>
                   <h3>{"WebGPU"}</h3>
-                  <h4>{"2D"}</h4>
-                  <Link to={"/webgpu/2d/colored-quad"}>{"Colored Quad"}</Link>
+                  <h4>{"3D"}</h4>
+                  <Link to={"/webgpu/3d/cube"}>{"Cube"}</Link>
+                  <Link to={"/webgpu/3d/rotating-cube"}>{"Rotating Cube"}</Link>
+                  <Link to={"/webgpu/3d/moving-camera"}>{"Moving Camera"}</Link>
                 </div>
               </>
             );
@@ -46,9 +48,11 @@ const App: React.FC = () => {
           {/* Basic */}
           <Route exact path={"/webgl2/2d/colored-quad"} render={(): React.ReactElement => <ExampleWrapper title={"Colored Quad"} Component={examples.webgl2.ColoredQuad}/>}/>
 
-          {/*** WebGL2 ***/}
+          {/*** WebGPU ***/}
           {/* Basic */}
-          <Route exact path={"/webgpu/2d/colored-quad"} render={(): React.ReactElement => <ExampleWrapper title={"Colored Quad"} Component={examples.webgpu.ColoredQuad}/>}/>
+          <Route exact path={"/webgpu/3d/cube"} render={(): React.ReactElement => <ExampleWrapper title={"Cube"} Component={examples.webgpu.Cube}/>}/>
+          <Route exact path={"/webgpu/3d/rotating-cube"} render={(): React.ReactElement => <ExampleWrapper title={"Rotating Cube"} Component={examples.webgpu.RotatingCube}/>}/>
+          <Route exact path={"/webgpu/3d/moving-camera"} render={(): React.ReactElement => <ExampleWrapper title={"Moving Camera"} Component={examples.webgpu.MovingCamera}/>}/>
         </Switch>
       </Router>
     </div>
