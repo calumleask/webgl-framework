@@ -9,7 +9,7 @@ export const MovingCameraExample: React.FC = () => {
     const renderer = new glfw.graphics.webgpu.Renderer(canvas);
 
     const camera = new glfw.graphics.webgpu.Camera(75, canvas.getAspect())
-      .setPosZ(-10);
+      .setZ(10);
 
     const scene = new glfw.graphics.webgpu.Scene();
     const cubeMesh = new glfw.graphics.webgpu.CubeMesh();
@@ -21,27 +21,29 @@ export const MovingCameraExample: React.FC = () => {
       if (e.repeat) return;
       switch (e.key) {
       case "w": {
-        camera.setPosZ(camera.getPosZ() + 1);
+        camera.setZ(camera.getZ() - 1);
         break;
       }
       case "s": {
-        camera.setPosZ(camera.getPosZ() - 1);
+        camera.setZ(camera.getZ() + 1);
         break;
       }
-      case "a": {
-        camera.setPosX(camera.getPosX() + 1);
+      case "a":
+      case "ArrowLeft": {
+        camera.setX(camera.getX() - 1);
         break;
       }
-      case "d": {
-        camera.setPosX(camera.getPosX() - 1);
+      case "d":
+      case "ArrowRight": {
+        camera.setX(camera.getX() + 1);
         break;
       }
-      case "r": {
-        camera.setPosY(camera.getPosY() - 1);
+      case "ArrowUp": {
+        camera.setY(camera.getY() + 1);
         break;
       }
-      case "f": {
-        camera.setPosY(camera.getPosY() + 1);
+      case "ArrowDown": {
+        camera.setY(camera.getY() - 1);
         break;
       }
       default: break;

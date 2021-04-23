@@ -20,7 +20,7 @@ export class Renderable {
     this._material = material;
 
     this._modelMatrix = mat4.create();
-    mat4.translate(this._modelMatrix, this._modelMatrix, vec3.fromValues(-2, 0, 0));
+    mat4.translate(this._modelMatrix, this._modelMatrix, vec3.fromValues(0, 0, 0));
     this._modelViewProjectionMatrix = mat4.create() as Float32Array;
 
     this._uniformBindGroup = null;
@@ -43,16 +43,16 @@ export class Renderable {
   }
 
   updateMatrix(viewMatrix: mat4, projectionMatrix: mat4): void {
-    const now = Date.now() / 1000;
+    // const now = Date.now() / 1000;
 
     const tmpMat4 = mat4.create();
 
-    mat4.rotate(
-      tmpMat4,
-      this._modelMatrix,
-      1,
-      vec3.fromValues(Math.sin(now), Math.cos(now), 0)
-    );
+    // mat4.rotate(
+    //   tmpMat4,
+    //   this._modelMatrix,
+    //   1,
+    //   vec3.fromValues(Math.sin(now), Math.cos(now), 0)
+    // );
 
     mat4.multiply(this._modelViewProjectionMatrix, viewMatrix, tmpMat4);
     mat4.multiply(

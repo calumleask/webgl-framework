@@ -9,7 +9,7 @@ export const CubeExample: React.FC = () => {
     const renderer = new glfw.graphics.webgpu.Renderer(canvas);
 
     const camera = new glfw.graphics.webgpu.Camera(75, canvas.getAspect())
-      .setPosZ(-10);
+      .setZ(-10);
 
     const scene = new glfw.graphics.webgpu.Scene();
     const cubeMesh = new glfw.graphics.webgpu.CubeMesh();
