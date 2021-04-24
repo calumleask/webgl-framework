@@ -12,7 +12,7 @@ export class Renderable {
 
   private _uniformBindGroup: GPUBindGroup | null;
 
-  //private _position: vec3;
+  private _position: vec3;
   private _transformationMatrix: mat4;
 
   private _modelMatrix: mat4;
@@ -24,11 +24,10 @@ export class Renderable {
 
     this._uniformBindGroup = null;
 
-    //this._position = vec3.create();
+    this._position = vec3.create();
     this._transformationMatrix = mat4.create();
 
     this._modelMatrix = mat4.create();
-    mat4.translate(this._modelMatrix, this._modelMatrix, vec3.fromValues(0, 0, 0));
     this._modelViewProjectionMatrix = mat4.create() as Float32Array;
   }
 
@@ -38,6 +37,12 @@ export class Renderable {
 
   getMaterial(): Material {
     return this._material;
+  }
+
+  setPosition(pos: vec3): this {
+    vec3.copy(this._position, pos);
+    mat4.translate(this._modelMatrix, mat4.identity(this._modelMatrix), pos);
+    return this;
   }
 
   getTransformationMatrix(): mat4 {
@@ -61,7 +66,9 @@ export class Renderable {
 
   /** @internal */
   _updateMatrix(viewMatrix: mat4, projectionMatrix: mat4): void {
-    mat4.multiply(this._modelViewProjectionMatrix, viewMatrix, this._transformationMatrix);
+    const tmpMat = mat4.create();
+    mat4.multiply(tmpMat, this._modelMatrix, this._transformationMatrix);
+    mat4.multiply(this._modelViewProjectionMatrix, viewMatrix, tmpMat);
     mat4.multiply(
       this._modelViewProjectionMatrix,
       projectionMatrix,

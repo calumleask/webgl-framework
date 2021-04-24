@@ -39,6 +39,7 @@ const App: React.FC = () => {
                   <h4>{"Basic"}</h4>
                   <Link to={"/webgpu/3d/basic/cube"}>{"Cube"}</Link>
                   <h4>{"Transformations"}</h4>
+                  <Link to={"/webgpu/3d/transformations/rotating-around-local-axis"}>{"Rotating Around Local Axis"}</Link>
                   <Link to={"/webgpu/3d/transformations/rotating-around-a-changing-axis"}>{"Rotating Around a Changing Axis"}</Link>
                   <h4>{"Camera"}</h4>
                   <Link to={"/webgpu/3d/camera/moving-camera"}>{"Moving Camera"}</Link>
@@ -55,6 +56,7 @@ const App: React.FC = () => {
           {/* Basic */}
           <Route exact path={"/webgpu/3d/basic/cube"} render={(): React.ReactElement => <ExampleWrapper title={"Cube"} Component={examples.webgpu.Cube}/>}/>
           {/* Transformations */}
+          <Route exact path={"/webgpu/3d/transformations/rotating-around-local-axis"} render={(): React.ReactElement => <ExampleWrapper title={"Rotating Around Local Axis"} Component={examples.webgpu.RotatingAroundLocalAxis}/>}/>
           <Route exact path={"/webgpu/3d/transformations/rotating-around-a-changing-axis"} render={(): React.ReactElement => <ExampleWrapper title={"Rotating Around a Changing Axis"} Component={examples.webgpu.RotatingAroundAChangingAxis}/>}/>
           {/* Camera */}
           <Route exact path={"/webgpu/3d/camera/moving-camera"} render={(): React.ReactElement => <ExampleWrapper title={"Moving Camera"} Component={examples.webgpu.MovingCamera}/>}/>
