@@ -130,10 +130,10 @@ export class Renderer {
 
     for (const [material, renderables] of scene.getSharedMaterialRenderables()) {
 
-      const uniformBuffer = material.getUniformBuffer();
+      const uniformBuffer = material._getUniformBuffer();
       if (!uniformBuffer) return;
 
-      const renderPipeline = material.getRenderPipeline();
+      const renderPipeline = material._getRenderPipeline();
       if (!renderPipeline) return;
       passEncoder.setPipeline(renderPipeline);
 
@@ -141,7 +141,7 @@ export class Renderer {
         const modelViewProjectionMatrix = renderable._getModelViewProjectionMatrix();
         if (!modelViewProjectionMatrix) return;
 
-        this._device?.queue.writeBuffer(
+        this._device.queue.writeBuffer(
           uniformBuffer,
           0,
           modelViewProjectionMatrix.buffer,
@@ -153,7 +153,7 @@ export class Renderer {
         if (!dataBuffer) return;
         passEncoder.setVertexBuffer(0, dataBuffer);
 
-        const uniformBindGroup = renderable._getUniformBindGroup();
+        const uniformBindGroup = material._getUniformBindGroup();
         if (!uniformBindGroup) return;
 
         passEncoder.setBindGroup(0, uniformBindGroup);

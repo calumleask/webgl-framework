@@ -4,13 +4,9 @@ import { Material } from "./material";
 import { Mesh } from "./mesh";
 import { Renderer } from "./renderer";
 
-const matrixSize = 4 * 16;
-
 export class Renderable {
   private _mesh: Mesh;
   private _material: Material;
-
-  private _uniformBindGroup: GPUBindGroup | null;
 
   private _position: vec3;
   private _transformationMatrix: mat4;
@@ -21,8 +17,6 @@ export class Renderable {
   constructor(mesh: Mesh, material: Material) {
     this._mesh = mesh;
     this._material = material;
-
-    this._uniformBindGroup = null;
 
     this._position = vec3.create();
     this._transformationMatrix = mat4.create();
@@ -55,11 +49,6 @@ export class Renderable {
   }
 
   /** @internal */
-  _getUniformBindGroup(): GPUBindGroup | null {
-    return this._uniformBindGroup;
-  }
-
-  /** @internal */
   _getModelViewProjectionMatrix(): Float32Array {
     return this._modelViewProjectionMatrix;
   }
@@ -80,23 +69,7 @@ export class Renderable {
   _setupBuffers(renderer: Renderer): void {
     this._mesh._createVertexBuffer(renderer);
     const device = renderer._getDevice();
-    const renderPipeline = this._material._createPipeline(device);
-    const uniformBuffer = this._material._createUniformBuffer(device);
-
-    if (this._uniformBindGroup) return;
-    this._uniformBindGroup = device.createBindGroup({
-      layout: renderPipeline.getBindGroupLayout(0),
-      entries: [
-        {
-          binding: 0,
-          resource: {
-            buffer: uniformBuffer,
-            offset: 0,
-            size: matrixSize,
-          },
-        },
-      ],
-    });
+    this._material._setup(device);
   }
 
 }

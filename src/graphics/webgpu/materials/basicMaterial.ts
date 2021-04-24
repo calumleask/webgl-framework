@@ -40,4 +40,24 @@ export class BasicMaterial extends Material {
     });
   }
 
+  /** @internal */
+  protected _createUniformBindGroup(device: GPUDevice, renderPipeline: GPURenderPipeline, uniformBuffer: GPUBuffer): void {
+    if (this._uniformBindGroup) return;
+
+    const matrixSize = 4 * 16;
+    this._uniformBindGroup = device.createBindGroup({
+      layout: renderPipeline.getBindGroupLayout(0),
+      entries: [
+        {
+          binding: 0,
+          resource: {
+            buffer: uniformBuffer,
+            offset: 0,
+            size: matrixSize,
+          },
+        },
+      ],
+    });
+  }
+
 }

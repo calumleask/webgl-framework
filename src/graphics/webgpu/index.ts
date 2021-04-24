@@ -8,3 +8,4 @@ export { Camera } from "./camera";
 export { CubeMesh } from "./meshes/cubeMesh";
 
 export { BasicMaterial } from "./materials/basicMaterial";
+export { TexturedMaterial } from "./materials/texturedMaterial";
