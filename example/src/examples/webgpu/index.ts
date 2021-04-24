@@ -1,7 +1,9 @@
 
-// 3D
-export { CubeExample as Cube } from "./3d/Cube";
-export { RotatingCubeExample as RotatingCube } from "./3d/RotatingCube";
+// 3D / Basic
+export { CubeExample as Cube } from "./3d/basic/Cube";
+
+// 3D / Transformations
+export { RotatingAroundAChangingAxisExample as RotatingAroundAChangingAxis } from "./3d/transformations/RotatingAroundAChangingAxis";
 
 // 3D / Camera
 export { MovingCameraExample as MovingCamera } from "./3d/camera/MovingCamera";

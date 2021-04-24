@@ -119,7 +119,7 @@ export class Renderer {
     const projectionMatrix = camera.getProjectionMatrix();
 
     scene.getRenderables().forEach(renderable => {
-      renderable.updateMatrix(viewMatrix, projectionMatrix);
+      renderable._updateMatrix(viewMatrix, projectionMatrix);
     });
 
     this._renderPassDesc.colorAttachments[0].view = this._swapChain.getCurrentTexture().createView();
@@ -138,7 +138,7 @@ export class Renderer {
       passEncoder.setPipeline(renderPipeline);
 
       renderables.forEach((renderable) => {
-        const modelViewProjectionMatrix = renderable.getModelViewProjectionMatrix();
+        const modelViewProjectionMatrix = renderable._getModelViewProjectionMatrix();
         if (!modelViewProjectionMatrix) return;
 
         this._device?.queue.writeBuffer(
@@ -153,7 +153,7 @@ export class Renderer {
         if (!dataBuffer) return;
         passEncoder.setVertexBuffer(0, dataBuffer);
 
-        const uniformBindGroup = renderable.getUniformBindGroup();
+        const uniformBindGroup = renderable._getUniformBindGroup();
         if (!uniformBindGroup) return;
 
         passEncoder.setBindGroup(0, uniformBindGroup);
