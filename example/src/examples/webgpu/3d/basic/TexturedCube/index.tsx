@@ -2,26 +2,6 @@ import React, { useEffect } from "react";
 
 import { graphics } from "webgl-framework";
 
-const loadTexture = async (src: string): Promise<ImageBitmap> => {
-  return new Promise((resolve, reject) => {
-    const img = document.createElement("img");
-    img.src = src;
-    img.decode()
-      .then(() => {
-        createImageBitmap(img)
-          .then((bitmap) => {
-            resolve(bitmap);
-          })
-          .catch((err) => {
-            reject(err);
-          });
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
-
 export const TexturedCubeExample: React.FC = () => {
 
   useEffect(() => {
@@ -34,17 +14,11 @@ export const TexturedCubeExample: React.FC = () => {
 
     const scene = new graphics.webgpu.Scene();
     const cubeMesh = new graphics.webgpu.CubeMesh();
+    const texture = new graphics.webgpu.Texture("square_texture.png");
     const texturedMaterial = new graphics.webgpu.TexturedMaterial();
+    texturedMaterial.setTexture(texture);
     const renderable = new graphics.webgpu.Renderable(cubeMesh, texturedMaterial);
     scene.addRenderable(renderable);
-
-    loadTexture("square_texture.png")
-      .then((imageBitmap) => {
-        texturedMaterial.setTexture(imageBitmap);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
 
     const frame = (): void => {
       renderer.render(scene, camera);

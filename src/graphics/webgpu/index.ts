@@ -9,3 +9,5 @@ export { CubeMesh } from "./meshes/cubeMesh";
 
 export { BasicMaterial } from "./materials/basicMaterial";
 export { TexturedMaterial } from "./materials/texturedMaterial";
+
+export { Texture } from "./texture";

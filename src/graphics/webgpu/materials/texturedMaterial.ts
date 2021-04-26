@@ -3,13 +3,13 @@ import { Material } from "../material";
 import { shaderSources } from "../shaders/sources/shader_sources";
 
 import { Mesh } from "../mesh";
+import { Texture } from "../texture";
 
 export class TexturedMaterial extends Material {
-  private _texture: GPUTexture | null;
+  private _texture: Texture | null;
   private _sampler: GPUSampler | null;
-  private _imageBitmap: ImageBitmap | null;
 
-  constructor(imageBitmap?: ImageBitmap) {
+  constructor() {
     super({
       vertex: {
         shaderSource: shaderSources.textured.vertex,
@@ -72,45 +72,14 @@ export class TexturedMaterial extends Material {
 
     this._texture = null;
     this._sampler = null;
-    this._imageBitmap = imageBitmap || null;
   }
 
-  setTexture(imageBitmap: ImageBitmap): this {
-    this._imageBitmap = imageBitmap;
+  setTexture(texture: Texture): this {
+    this._texture = texture;
     if (this._device) {
       this._setup(this._device);
     }
     return this;
-  }
-
-  /** @internal */
-  private _createTexture(device: GPUDevice): GPUTexture {
-
-    // if (!this._imageBitmap) {
-    //   this._imageBitmap = await createImageBitmap(new ImageData(new Uint8ClampedArray([255, 128, 128, 255]), 1, 1));
-    // }
-
-    const width = this._imageBitmap?.width || 1;
-    const height = this._imageBitmap?.height || 1;
-    this._texture = device.createTexture({
-      size: [width, height, 1],
-      format: "rgba8unorm",
-      usage: GPUTextureUsage.SAMPLED | GPUTextureUsage.COPY_DST
-    });
-
-    if (this._imageBitmap) {
-      device.queue.copyImageBitmapToTexture(
-        {
-          imageBitmap: this._imageBitmap
-        },
-        {
-          texture: this._texture
-        },
-        [this._imageBitmap.width, this._imageBitmap.height, 1]
-      );
-    }
-
-    return this._texture;
   }
 
   /** @internal */
@@ -128,7 +97,17 @@ export class TexturedMaterial extends Material {
   /** @internal */
   protected _createUniformBindGroup(device: GPUDevice, renderPipeline: GPURenderPipeline, uniformBuffer: GPUBuffer): void {
     const sampler = this._createSampler(device);
-    const texture = this._createTexture(device);
+
+    this._texture?._init(device);
+    let texture = this._texture?._getTexture();
+    if (!texture) {
+      texture = Texture._getDefaultTexture(device);
+      this._texture?._onLoad(() => {
+        if (this._device) {
+          this._setup(this._device);
+        }
+      });
+    }
 
     const matrixSize = 4 * 16;
     this._uniformBindGroup = device.createBindGroup({
