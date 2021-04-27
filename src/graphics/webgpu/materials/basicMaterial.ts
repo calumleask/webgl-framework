@@ -1,4 +1,5 @@
 import { Material } from "../material";
+import { MaterialImplementation } from "../materialImplementation";
 
 import { shaderSources } from "../shaders/sources/shader_sources";
 
@@ -40,24 +41,35 @@ export class BasicMaterial extends Material {
     });
   }
 
-  /** @internal */
-  protected _createUniformBindGroup(device: GPUDevice, renderPipeline: GPURenderPipeline, uniformBuffer: GPUBuffer): void {
-    if (this._uniformBindGroup) return;
+}
 
+// TODO: use repository
+const material = new BasicMaterial();
+
+export class BasicMaterialImplementation extends MaterialImplementation {
+
+  constructor() {
+    super(material);
+  }
+
+  /** @internal */
+  _createUniformBindGroup(device: GPUDevice, renderPipeline: GPURenderPipeline, uniformBuffer: GPUBuffer, offset: number): GPUBindGroup {
     const matrixSize = 4 * 16;
-    this._uniformBindGroup = device.createBindGroup({
+    const uniformBindGroup = device.createBindGroup({
       layout: renderPipeline.getBindGroupLayout(0),
       entries: [
         {
           binding: 0,
           resource: {
             buffer: uniformBuffer,
-            offset: 0,
+            offset: offset,
             size: matrixSize,
           },
         },
       ],
     });
+
+    return uniformBindGroup;
   }
 
 }

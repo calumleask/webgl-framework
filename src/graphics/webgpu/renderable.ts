@@ -1,12 +1,11 @@
 import { mat4, vec3 } from "gl-matrix";
 
-import { Material } from "./material";
+import { MaterialImplementation } from "./materialImplementation";
 import { Mesh } from "./mesh";
-import { Renderer } from "./renderer";
 
 export class Renderable {
   private _mesh: Mesh;
-  private _material: Material;
+  private _material: MaterialImplementation;
 
   private _position: vec3;
   private _transformationMatrix: mat4;
@@ -14,7 +13,9 @@ export class Renderable {
   private _modelMatrix: mat4;
   private _modelViewProjectionMatrix: Float32Array;
 
-  constructor(mesh: Mesh, material: Material) {
+  private _uniformBindGroup: GPUBindGroup | null;
+
+  constructor(mesh: Mesh, material: MaterialImplementation) {
     this._mesh = mesh;
     this._material = material;
 
@@ -23,14 +24,21 @@ export class Renderable {
 
     this._modelMatrix = mat4.create();
     this._modelViewProjectionMatrix = mat4.create() as Float32Array;
+
+    this._uniformBindGroup = null;
   }
 
   getMesh(): Mesh {
     return this._mesh;
   }
 
-  getMaterial(): Material {
+  getMaterial(): MaterialImplementation {
     return this._material;
+  }
+
+  /** @internal */
+  _getUniformBindGroup(): GPUBindGroup | null {
+    return this._uniformBindGroup;
   }
 
   setPosition(pos: vec3): this {
@@ -66,10 +74,15 @@ export class Renderable {
   }
 
   /** @internal */
-  _setupBuffers(renderer: Renderer): void {
-    this._mesh._createVertexBuffer(renderer);
-    const device = renderer._getDevice();
-    this._material._setup(device);
+  _setupUniformBindGroup(device: GPUDevice, renderPipeline: GPURenderPipeline, uniformBuffer: GPUBuffer, instanceNumber: number): void {
+    const offset = 256; // uniformBindGroup offset must be 256-byte aligned
+    // TODO: this is gross
+    this._uniformBindGroup = this._material._createUniformBindGroup(device, renderPipeline, uniformBuffer, offset * instanceNumber);
+    if (this._material._isReady() === false) {
+      this._material._onReady(() => {
+        this._uniformBindGroup = this._material._createUniformBindGroup(device, renderPipeline, uniformBuffer, offset * instanceNumber);
+      });
+    }
   }
 
 }

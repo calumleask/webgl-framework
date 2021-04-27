@@ -1,10 +1,10 @@
 
-type OnReadyCallback = () => void;
+type OnLoadCallback = () => void;
 
 export class Texture {
   private _texture: GPUTexture | null;
   private _imageBitmapOrUrl: ImageBitmap | string | undefined;
-  private _onLoadCallback: OnReadyCallback | null;
+  private _onLoadCallback: OnLoadCallback | null;
 
   private static _defaultTexture: GPUTexture;
 
@@ -38,7 +38,7 @@ export class Texture {
   }
 
   /** @internal */
-  _onLoad(callback: OnReadyCallback): void {
+  _onLoad(callback: OnLoadCallback): void {
     this._onLoadCallback = callback;
   }
 

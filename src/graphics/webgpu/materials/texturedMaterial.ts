@@ -1,4 +1,5 @@
 import { Material } from "../material";
+import { MaterialImplementation } from "../materialImplementation";
 
 import { shaderSources } from "../shaders/sources/shader_sources";
 
@@ -6,8 +7,6 @@ import { Mesh } from "../mesh";
 import { Texture } from "../texture";
 
 export class TexturedMaterial extends Material {
-  private _texture: Texture | null;
-  private _sampler: GPUSampler | null;
 
   constructor() {
     super({
@@ -69,6 +68,19 @@ export class TexturedMaterial extends Material {
         }
       ]
     });
+  }
+
+}
+
+// TODO: use repository
+const material = new TexturedMaterial();
+
+export class TexturedMaterialImplementation extends MaterialImplementation {
+  private _texture: Texture | null;
+  private _sampler: GPUSampler | null;
+
+  constructor() {
+    super(material);
 
     this._texture = null;
     this._sampler = null;
@@ -76,9 +88,9 @@ export class TexturedMaterial extends Material {
 
   setTexture(texture: Texture): this {
     this._texture = texture;
-    if (this._device) {
-      this._setup(this._device);
-    }
+    this._ready = false;
+    // TODO: preload texture
+    // TODO: allow textures to be changed
     return this;
   }
 
@@ -95,7 +107,7 @@ export class TexturedMaterial extends Material {
   }
 
   /** @internal */
-  protected _createUniformBindGroup(device: GPUDevice, renderPipeline: GPURenderPipeline, uniformBuffer: GPUBuffer): void {
+  _createUniformBindGroup(device: GPUDevice, renderPipeline: GPURenderPipeline, uniformBuffer: GPUBuffer, offset: number): GPUBindGroup {
     const sampler = this._createSampler(device);
 
     this._texture?._init(device);
@@ -103,21 +115,20 @@ export class TexturedMaterial extends Material {
     if (!texture) {
       texture = Texture._getDefaultTexture(device);
       this._texture?._onLoad(() => {
-        if (this._device) {
-          this._setup(this._device);
-        }
+        this._ready = true;
+        if (this._onReadyCallback) this._onReadyCallback();
       });
     }
 
     const matrixSize = 4 * 16;
-    this._uniformBindGroup = device.createBindGroup({
+    const uniformBindGroup = device.createBindGroup({
       layout: renderPipeline.getBindGroupLayout(0),
       entries: [
         {
           binding: 0,
           resource: {
             buffer: uniformBuffer,
-            offset: 0,
+            offset: offset,
             size: matrixSize
           }
         },
@@ -131,5 +142,8 @@ export class TexturedMaterial extends Material {
         }
       ]
     });
+
+    return uniformBindGroup;
   }
+
 }

@@ -1,25 +1,63 @@
 import { Material } from "./material";
+import { MaterialImplementation } from "./materialImplementation";
+import { Mesh } from "./mesh";
 import { Renderable } from "./renderable";
 import { Renderer } from "./renderer";
 
+type MeshRenderableMap = Map<Mesh, Renderable[]>;
+type MaterialImplementationMeshRenderablesMapPair = { meshRenderableMap: MeshRenderableMap, materialImplementation: MaterialImplementation };
+type MaterialMeshRenderablesMap = Map<Material, MaterialImplementationMeshRenderablesMapPair>;
+
 export class Scene {
   private _renderables: Renderable[];
-  private _sharedMaterialRenderables: Map<Material, Renderable[]>;
+  private _sharedMaterialMeshRenderablesMap: MaterialMeshRenderablesMap;
 
   constructor() {
     this._renderables = [];
-    this._sharedMaterialRenderables = new Map();
+    this._sharedMaterialMeshRenderablesMap = new Map();
+  }
+
+  /** @internal */
+  private static _addRenderablesToMeshRenderableMap(renderable: Renderable, meshRenderableMap: MeshRenderableMap): void {
+    const mesh = renderable.getMesh();
+    const renderables = meshRenderableMap.get(mesh);
+    if (renderables) {
+      renderables.push(renderable);
+    }
+    else {
+      meshRenderableMap.set(mesh, [renderable]);
+    }
+  }
+
+  /** @internal */
+  private static _removeRenderablesFromMeshRenderableMap(renderable: Renderable, meshRenderableMap: MeshRenderableMap): void {
+    const mesh = renderable.getMesh();
+    const renderables = meshRenderableMap.get(mesh);
+    if (renderables) {
+      const index = renderables.indexOf(renderable);
+      if (index > -1) {
+        renderables.splice(index, 1);
+      }
+      if (renderables.length === 0) {
+        meshRenderableMap.delete(mesh);
+      }
+    }
   }
 
   addRenderable(renderable: Renderable): void {
     this._renderables.push(renderable);
-    const material = renderable.getMaterial();
-    const sharedMaterialRenderables = this._sharedMaterialRenderables.get(material);
-    if (sharedMaterialRenderables) {
-      sharedMaterialRenderables.push(renderable);
+    const materialImplementation = renderable.getMaterial();
+    const value = this._sharedMaterialMeshRenderablesMap.get(materialImplementation._getMaterial());
+    if (value) {
+      Scene._addRenderablesToMeshRenderableMap(renderable, value.meshRenderableMap);
     }
     else {
-      this._sharedMaterialRenderables.set(material, [renderable]);
+      const meshRenderableMap: MeshRenderableMap = new Map();
+      Scene._addRenderablesToMeshRenderableMap(renderable, meshRenderableMap);
+      this._sharedMaterialMeshRenderablesMap.set(materialImplementation._getMaterial(), {
+        materialImplementation,
+        meshRenderableMap
+      });
     }
   }
 
@@ -30,19 +68,17 @@ export class Scene {
   }
 
   removeRenderable(renderable: Renderable): void {
-    let index = this._renderables.indexOf(renderable);
+    const index = this._renderables.indexOf(renderable);
     if (index > -1) {
       this._renderables.splice(index, 1);
     }
-    const material = renderable.getMaterial();
-    const sharedMaterialRenderables = this._sharedMaterialRenderables.get(material);
-    if (sharedMaterialRenderables) {
-      index = sharedMaterialRenderables.indexOf(renderable);
-      if (index > -1) {
-        sharedMaterialRenderables.splice(index, 1);
-      }
-      if (sharedMaterialRenderables.length === 0) {
-        this._sharedMaterialRenderables.delete(material);
+    const materialImplementation = renderable.getMaterial();
+    const value = this._sharedMaterialMeshRenderablesMap.get(materialImplementation._getMaterial());
+    if (value) {
+      Scene._removeRenderablesFromMeshRenderableMap(renderable, value.meshRenderableMap);
+      if (value.meshRenderableMap.size === 0) {
+        value.materialImplementation._destroy();
+        this._sharedMaterialMeshRenderablesMap.delete(materialImplementation._getMaterial());
       }
     }
   }
@@ -51,8 +87,12 @@ export class Scene {
     return this._renderables;
   }
 
-  getSharedMaterialRenderables(): [Material, Renderable[]][] {
-    return Array.from(this._sharedMaterialRenderables.entries());
+  getMaterials(): Material[] {
+    return Array.from(this._sharedMaterialMeshRenderablesMap.keys());
+  }
+
+  getSharedMaterialMeshRenderables(): MaterialImplementationMeshRenderablesMapPair[] {
+    return Array.from(this._sharedMaterialMeshRenderablesMap.values());
   }
 
   /** @internal */
@@ -61,9 +101,22 @@ export class Scene {
   }
 
   /** @internal */
-  _setup(renderer: Renderer): void {
-    this._renderables.forEach(renderable => {
-      renderable._setupBuffers(renderer);
+  _setupBuffersAndUniforms(renderer: Renderer): void {
+    this._sharedMaterialMeshRenderablesMap.forEach(({ meshRenderableMap, materialImplementation }, material) => {
+      const device = renderer._getDevice();
+      const renderPipeline = material._setupRenderPipeline(device);
+      let uniformBuffer = materialImplementation._getUniformBuffer();
+      if (!uniformBuffer) {
+        const instanceCount: number = Array.from(meshRenderableMap.values()).reduce((a, b) => a + b.length, 0);
+        uniformBuffer = materialImplementation._setupUniformBuffer(device, instanceCount);
+      }
+      meshRenderableMap.forEach((renderables, mesh) => {
+        mesh._createVertexBuffer(renderer);
+        renderables.forEach((renderable, index) => {
+          if (!uniformBuffer) return;
+          renderable._setupUniformBindGroup(renderer._getDevice(), renderPipeline, uniformBuffer, index);
+        });
+      });
     });
   }
 }

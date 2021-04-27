@@ -7,7 +7,7 @@ export { Camera } from "./camera";
 
 export { CubeMesh } from "./meshes/cubeMesh";
 
-export { BasicMaterial } from "./materials/basicMaterial";
-export { TexturedMaterial } from "./materials/texturedMaterial";
+export { BasicMaterialImplementation as BasicMaterial } from "./materials/basicMaterial";
+export { TexturedMaterialImplementation as TexturedMaterial } from "./materials/texturedMaterial";
 
 export { Texture } from "./texture";

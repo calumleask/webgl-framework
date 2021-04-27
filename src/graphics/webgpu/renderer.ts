@@ -98,7 +98,7 @@ export class Renderer {
     if (this._activeScene === scene) return;
     this._activeScene?._release();
     this._activeScene = scene;
-    this._activeScene._setup(this);
+    this._activeScene._setupBuffersAndUniforms(this);
   }
 
   /** @internal */
@@ -119,6 +119,7 @@ export class Renderer {
     const projectionMatrix = camera.getProjectionMatrix();
 
     scene.getRenderables().forEach(renderable => {
+      // TODO: use a dirty flag
       renderable._updateMatrix(viewMatrix, projectionMatrix);
     });
 
@@ -126,46 +127,54 @@ export class Renderer {
 
     const commandEncoder = this._device.createCommandEncoder();
     // TODO: Is this per material?
-    const passEncoder = commandEncoder.beginRenderPass(this._renderPassDesc);
 
-    for (const [material, renderables] of scene.getSharedMaterialRenderables()) {
+    for (const { meshRenderableMap, materialImplementation } of scene.getSharedMaterialMeshRenderables()) {
+      const passEncoder = commandEncoder.beginRenderPass(this._renderPassDesc);
 
-      const uniformBuffer = material._getUniformBuffer();
+      const uniformBuffer = materialImplementation._getUniformBuffer();
       if (!uniformBuffer) return;
 
-      const renderPipeline = material._getRenderPipeline();
+      const renderPipeline = materialImplementation._getMaterialRenderPipeline();
       if (!renderPipeline) return;
+
       passEncoder.setPipeline(renderPipeline);
 
-      renderables.forEach((renderable) => {
-        const modelViewProjectionMatrix = renderable._getModelViewProjectionMatrix();
-        if (!modelViewProjectionMatrix) return;
+      for (const [mesh, renderables] of Array.from(meshRenderableMap.entries())) {
 
-        this._device.queue.writeBuffer(
-          uniformBuffer,
-          0,
-          modelViewProjectionMatrix.buffer,
-          modelViewProjectionMatrix.byteOffset,
-          modelViewProjectionMatrix.byteLength
-        );
+        const offset = 256;
 
-        const dataBuffer = this._dataBuffers.getBuffer(renderable.getMesh().getVertexBufferId());
+        const dataBuffer = this._dataBuffers.getBuffer(mesh.getVertexBufferId());
         if (!dataBuffer) return;
         passEncoder.setVertexBuffer(0, dataBuffer);
 
-        const uniformBindGroup = material._getUniformBindGroup();
-        if (!uniformBindGroup) return;
+        renderables.forEach((renderable, index) => {
+          const modelViewProjectionMatrix = renderable._getModelViewProjectionMatrix();
+          if (!modelViewProjectionMatrix) return;
 
-        passEncoder.setBindGroup(0, uniformBindGroup);
-        passEncoder.draw(renderable.getMesh().getVertexCount(), 1, 0, 0);
-      });
+          this._device.queue.writeBuffer(
+            uniformBuffer,
+            index * offset,
+            modelViewProjectionMatrix.buffer,
+            modelViewProjectionMatrix.byteOffset,
+            modelViewProjectionMatrix.byteLength
+          );
 
+          const uniformBindGroup = renderable._getUniformBindGroup();
+          if (!uniformBindGroup) return;
+
+          passEncoder.setBindGroup(0, uniformBindGroup);
+          passEncoder.draw(mesh.getVertexCount(), 1, 0, 0);
+        });
+
+
+      }
+
+      // TODO: Is this per material?
+      passEncoder.endPass();
+
+      this._device.queue.submit([commandEncoder.finish()]);
     }
 
-    // TODO: Is this per material?
-    passEncoder.endPass();
-
-    this._device.queue.submit([commandEncoder.finish()]);
   }
 }
 
