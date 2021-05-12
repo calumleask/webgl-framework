@@ -1,21 +1,21 @@
 import React, { useEffect } from "react";
 
-import { graphics } from "webgl-framework";
+import wgf from "webgl-framework";
 import { vec3 } from "gl-matrix";
 
 export const MovingCameraExample: React.FC = () => {
 
   useEffect(() => {
-    const canvas = new graphics.webgpu.Canvas("glCanvas");
-    const renderer = new graphics.webgpu.Renderer(canvas);
+    const canvas = new wgf.graphics.webgpu.Canvas("glCanvas");
+    const renderer = new wgf.graphics.webgpu.Renderer(canvas);
 
-    const camera = new graphics.webgpu.Camera(75, canvas.getAspect())
+    const camera = new wgf.camera.PerspectiveCamera(75, canvas.getAspect())
       .setZ(10);
 
-    const scene = new graphics.webgpu.Scene();
-    const cubeMesh = new graphics.webgpu.CubeMesh();
-    const basicMaterial = new graphics.webgpu.BasicMaterial();
-    const renderable = new graphics.webgpu.Renderable(cubeMesh, basicMaterial);
+    const scene = new wgf.graphics.webgpu.Scene();
+    const cubeMesh = new wgf.graphics.webgpu.CubeMesh();
+    const basicMaterial = new wgf.graphics.webgpu.BasicMaterial();
+    const renderable = new wgf.graphics.webgpu.Renderable(cubeMesh, basicMaterial);
     scene.addRenderable(renderable);
 
     window.addEventListener("keydown", (e) => {

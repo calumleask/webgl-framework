@@ -2,7 +2,7 @@
 // TODO: move
 import { WebGPUCanvas as Canvas } from "./canvas";
 import { MeshDataBuffers } from "./meshDataBuffers";
-import { Camera } from "./camera";
+import { ICamera } from "../../camera/ICamera";
 import { Scene } from "./scene";
 
 export class Renderer {
@@ -111,7 +111,7 @@ export class Renderer {
     return this._dataBuffers;
   }
 
-  render(scene: Scene, camera: Camera): void {
+  render(scene: Scene, camera: ICamera): void {
     if (!this._ready) return;
     this._initScene(scene);
 
