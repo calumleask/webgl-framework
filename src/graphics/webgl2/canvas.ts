@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Vec2 } from "../math";
+import { Vec2 } from "../../math";
 
 export class WebGLCanvas {
   private _canvas:  HTMLCanvasElement | null;
@@ -19,7 +18,8 @@ export class WebGLCanvas {
 
     // Only continue if WebGL is available and working
     if (!this._gl) {
-      throw Error("Unable to initialize WebGL2. Your browser or machine may not support it.");
+      console.error("Unable to initialize WebGL2. Your browser or machine may not support it.");
+      return;
     }
   }
 

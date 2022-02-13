@@ -1,6 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Vec2, Vec3, Vec4 } from "../math";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Vec2, Vec3, Vec4 } from "../../math";
 import { Renderable, RenderableUniforms } from "./Renderable";
 
 export class Quad implements Renderable {
