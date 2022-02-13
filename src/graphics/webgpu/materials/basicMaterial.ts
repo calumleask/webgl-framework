@@ -33,7 +33,7 @@ export class BasicMaterial extends Material {
       },
       fragment: {
         shaderSource: shaderSources.basic.fragment,
-        swapChainFormat: "bgra8unorm"
+        format: "bgra8unorm"
       },
       primitive: {
         topology: "triangle-list"

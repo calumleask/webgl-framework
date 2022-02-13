@@ -6,8 +6,9 @@ import { ICamera } from "../../camera/ICamera";
 import { Scene } from "./scene";
 
 export class Renderer {
+  private _context: GPUCanvasContext;
+
   private _device: GPUDevice;
-  private _swapChain: GPUSwapChain;
 
   private _dataBuffers: MeshDataBuffers;
 
@@ -23,14 +24,24 @@ export class Renderer {
     this._ready = false;
 
     this._init(canvas)
-      .then(({ context, device }) => {
+      .then(({ adapter, context, device }) => {
+        this._context = context;
         this._ready = true;
         this._device = device;
 
+        // TODO: move inside canvas
+        const devicePixelRatio = window.devicePixelRatio || 1;
+        const size = [
+          canvas.getCanvasSizefv()[0] * devicePixelRatio,
+          canvas.getCanvasSizefv()[1] * devicePixelRatio,
+        ];
+
+        const format = context.getPreferredFormat(adapter);
         // Setup render outputs
-        this._swapChain = context.configureSwapChain({
+        this._context.configure({
           device: this._device,
-          format: "bgra8unorm"
+          format: format,
+          size: size,
         });
 
         const depthTexture = this._device.createTexture({
@@ -68,7 +79,7 @@ export class Renderer {
   }
 
   /** @internal */
-  private async _init(canvas: Canvas): Promise<{ context: GPUCanvasContext, device: GPUDevice }> {
+  private async _init(canvas: Canvas): Promise<{ adapter: GPUAdapter; context: GPUCanvasContext; device: GPUDevice; }> {
     if (!navigator.gpu) {
       throw Error("WebGPU is not supported/enabled in your browser.");
     }
@@ -89,7 +100,7 @@ export class Renderer {
     }
 
     return {
-      context, device
+      adapter, context, device
     };
   }
 
@@ -123,7 +134,7 @@ export class Renderer {
       renderable._updateMatrix(viewMatrix, projectionMatrix);
     });
 
-    this._renderPassDesc.colorAttachments[0].view = this._swapChain.getCurrentTexture().createView();
+    this._renderPassDesc.colorAttachments[0].view = this._context.getCurrentTexture().createView();
 
     const commandEncoder = this._device.createCommandEncoder();
     // TODO: Is this per material?

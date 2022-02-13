@@ -34,7 +34,7 @@ export class TexturedMaterial extends Material {
       },
       fragment: {
         shaderSource: shaderSources.textured.fragment,
-        swapChainFormat: "bgra8unorm"
+        format: "bgra8unorm"
       },
       primitive: {
         topology: "triangle-list"

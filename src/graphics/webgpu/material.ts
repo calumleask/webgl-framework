@@ -8,7 +8,7 @@ type PipelineState = {
     buffers?: Iterable<GPUVertexBufferLayout | null>;
   },
   fragment: ProgramableStageBase & {
-    swapChainFormat: GPUTextureFormat;
+    format: GPUTextureFormat;
   },
   primitive: {
     topology: GPUPrimitiveTopology;
@@ -61,7 +61,7 @@ export abstract class Material {
         entryPoint: "main",
         targets: [
           {
-            format: pipelineState.fragment.swapChainFormat
+            format: pipelineState.fragment.format
           }
         ]
       },
