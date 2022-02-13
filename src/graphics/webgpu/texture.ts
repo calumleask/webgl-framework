@@ -74,13 +74,16 @@ export class Texture {
     const texture = device.createTexture({
       size: [width, height, 1],
       format: "rgba8unorm",
-      usage: GPUTextureUsage.SAMPLED | GPUTextureUsage.COPY_DST
+      usage:
+        GPUTextureUsage.TEXTURE_BINDING |
+        GPUTextureUsage.COPY_DST |
+        GPUTextureUsage.RENDER_ATTACHMENT,
     });
 
     if (bitmap) {
-      device.queue.copyImageBitmapToTexture(
+      device.queue.copyExternalImageToTexture(
         {
-          imageBitmap: bitmap
+          source: bitmap
         },
         {
           texture: texture
@@ -98,7 +101,10 @@ export class Texture {
       Texture._defaultTexture = device.createTexture({
         size: [1, 1, 1],
         format: "rgba8unorm",
-        usage: GPUTextureUsage.SAMPLED | GPUTextureUsage.COPY_DST
+        usage:
+          GPUTextureUsage.TEXTURE_BINDING |
+          GPUTextureUsage.COPY_DST |
+          GPUTextureUsage.RENDER_ATTACHMENT,
       });
     }
     return Texture._defaultTexture;

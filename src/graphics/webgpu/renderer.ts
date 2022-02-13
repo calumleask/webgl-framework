@@ -57,16 +57,24 @@ export class Renderer {
           colorAttachments: [
             {
               view: undefinedGPUTextureView,
-              loadValue: { r: 0.0, g: 0.0, b: 0.0, a: 1.0 },
+
+              clearValue: { r: 0.0, g: 0.0, b: 0.0, a: 1.0 },
+              loadOp: "clear" as GPULoadOp,
+              loadValue: "clear" as GPULoadOp, // TODO: remove once removed from type or is made optional
               storeOp: "store" as GPUStoreOp
             }
           ],
           depthStencilAttachment: {
             view: depthTexture.createView(),
 
-            depthLoadValue: 1.0,
+            depthLoadValue: "clear" as GPULoadOp, // TODO: remove once removed from type or is made optional
+            depthLoadOp: "clear" as GPULoadOp,
+            depthClearValue: 1.0,
             depthStoreOp: "store" as GPUStoreOp,
+
             stencilLoadValue: 0,
+            stencilLoadOp: "clear" as GPULoadOp,
+            stencilClearValue: 0,
             stencilStoreOp: "store" as GPUStoreOp,
           },
         };
@@ -181,7 +189,7 @@ export class Renderer {
       }
 
       // TODO: Is this per material?
-      passEncoder.endPass();
+      passEncoder.end();
 
       this._device.queue.submit([commandEncoder.finish()]);
     }
@@ -189,4 +197,4 @@ export class Renderer {
   }
 }
 
-const undefinedGPUTextureView: GPUTextureView = { label: null, __brand: "GPUTextureView" };
+const undefinedGPUTextureView: GPUTextureView = { label: undefined, __brand: "GPUTextureView" };
