@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-import wgf from "webgl-framework";
+import * as wgf from "webgl-framework";
 
 export const ManyCubesExample: React.FC = () => {
 

@@ -7,3 +7,9 @@ export {
   graphics,
   math
 };
+
+export default {
+  camera,
+  graphics,
+  math
+};
