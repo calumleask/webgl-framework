@@ -1,6 +1,6 @@
 
 export const basicVertexSource = `
-  [[block]] struct Uniforms {
+  struct Uniforms {
     modelViewProjectionMatrix : mat4x4<f32>;
   };
 
