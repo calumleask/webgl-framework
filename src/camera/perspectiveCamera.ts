@@ -1,5 +1,5 @@
-import { ICamera } from "./ICamera"; 
-import { mat4, vec3 } from "gl-matrix";
+import { ICamera } from './ICamera'; 
+import { mat4, vec3 } from 'gl-matrix';
 
 export class PerspectiveCamera implements ICamera {
   private _position: vec3;

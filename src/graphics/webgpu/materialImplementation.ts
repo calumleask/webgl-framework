@@ -1,4 +1,4 @@
-import { Material } from "./material";
+import { Material } from './material';
 
 type OnReadyCallback = () => void;
 

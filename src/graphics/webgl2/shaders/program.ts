@@ -74,7 +74,7 @@ export class Program {
   private _createAttribSetters(glContext: WebGL2RenderingContext, program: WebGLProgram): AttributeSetters {
     const attribSetters: AttributeSetters = {};
     const attribCount = glContext.getProgramParameter(program, glContext.ACTIVE_ATTRIBUTES);
-    console.log(attribCount, "attribs");
+    console.log(attribCount, 'attribs');
     for (let i = 0; i < attribCount; ++i) {
       const attrib = glContext.getActiveAttrib(program, i);
       if (!attrib) continue;
@@ -91,7 +91,7 @@ export class Program {
   private _createUniformSetters(glContext: WebGL2RenderingContext, program: WebGLProgram): UniformSetters {
     const uniformSetters: UniformSetters = {};
     const uniformCount = glContext.getProgramParameter(program, glContext.ACTIVE_UNIFORMS);
-    console.log(uniformCount, "uniforms");
+    console.log(uniformCount, 'uniforms');
     for (let i = 0; i < uniformCount; ++i) {
       const uniform = glContext.getActiveUniform(program, i);
       if (!uniform) continue;

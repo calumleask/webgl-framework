@@ -1,4 +1,4 @@
-import { Vec2 } from "../../math";
+import { Vec2 } from '../../math';
 
 export class WebGPUCanvas {
   private _canvas:  HTMLCanvasElement | null;
@@ -13,13 +13,13 @@ export class WebGPUCanvas {
 
   /** @interval */
   private _init(canvasId: string): void {
-    this._canvas = document.querySelector("#" + canvasId);
+    this._canvas = document.querySelector('#' + canvasId);
     // TODO: check this worked.
 
-    this._context = this._canvas ? this._canvas.getContext("webgpu") : null;
+    this._context = this._canvas ? this._canvas.getContext('webgpu') : null;
 
     if (!this._context) {
-      console.error("Unable to initialize WebGPU. It may not be supported/enabled in your browser.");
+      console.error('Unable to initialize WebGPU. It may not be supported/enabled in your browser.');
     }
   }
 

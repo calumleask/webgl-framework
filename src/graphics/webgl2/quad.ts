@@ -1,5 +1,5 @@
-import { Vec2, Vec3, Vec4 } from "../../math";
-import { Renderable, RenderableUniforms } from "./Renderable";
+import { Vec2, Vec3, Vec4 } from '../../math';
+import { Renderable, RenderableUniforms } from './Renderable';
 
 export class Quad implements Renderable {
   private _position: Vec2;

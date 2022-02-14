@@ -1,8 +1,8 @@
-import { Material } from "./material";
-import { MaterialImplementation } from "./materialImplementation";
-import { Mesh } from "./mesh";
-import { Renderable } from "./renderable";
-import { Renderer } from "./renderer";
+import { Material } from './material';
+import { MaterialImplementation } from './materialImplementation';
+import { Mesh } from './mesh';
+import { Renderable } from './renderable';
+import { Renderer } from './renderer';
 
 type MeshRenderableMap = Map<Mesh, Renderable[]>;
 type MaterialImplementationMeshRenderablesMapPair = { meshRenderableMap: MeshRenderableMap, materialImplementation: MaterialImplementation };

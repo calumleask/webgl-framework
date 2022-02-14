@@ -1,4 +1,4 @@
-import { Renderer } from "./renderer";
+import { Renderer } from './renderer';
 
 export class Mesh {
   static readonly VertexSize = 4 * 10;

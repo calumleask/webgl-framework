@@ -1,4 +1,4 @@
-import { Renderable } from "./renderable";
+import { Renderable } from './renderable';
 
 type SceneLayer = {
   objectsToDraw: Renderable[];
@@ -18,17 +18,17 @@ export class Scene {
   }
 
   private _getLayer(layerId: number | string): SceneLayer {
-    if (typeof layerId === "number") layerId = layerId.toString();
+    if (typeof layerId === 'number') layerId = layerId.toString();
     return this._layers[layerId];
   }
 
   private _layerExists(layerId: number | string): boolean {
-    if (typeof layerId === "number") layerId = layerId.toString();
+    if (typeof layerId === 'number') layerId = layerId.toString();
     return this._layers[layerId] !== undefined;
   }
 
   private _ensureLayer(layerId: number | string): SceneLayer {
-    if (typeof layerId === "number") layerId = layerId.toString();
+    if (typeof layerId === 'number') layerId = layerId.toString();
     if (!this._layerExists(layerId)) {
       this._layers[layerId] = {
         objectsToDraw: []
@@ -38,7 +38,7 @@ export class Scene {
   }
 
   private _removeLayer(layerId: number | string): void {
-    if (typeof layerId === "number") layerId = layerId.toString();
+    if (typeof layerId === 'number') layerId = layerId.toString();
     if (this._layerExists(layerId)) {
       delete this._layers[layerId];
     }

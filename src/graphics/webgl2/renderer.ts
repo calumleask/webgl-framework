@@ -1,12 +1,12 @@
-import { Vec2 } from "../../math";
-import { Uniforms } from "./uniforms";
+import { Vec2 } from '../../math';
+import { Uniforms } from './uniforms';
 
-import { shaderSources } from "./shaders/sources/shader_sources";
-import { Program, ProgramInfo, AttributeSetters } from "./shaders/program";
+import { shaderSources } from './shaders/sources/shader_sources';
+import { Program, ProgramInfo, AttributeSetters } from './shaders/program';
 
 // TODO: move
-import { WebGLCanvas as Canvas } from "./canvas";
-import { Scene } from "./scene";
+import { WebGLCanvas as Canvas } from './canvas';
+import { Scene } from './scene';
 
 // TODO: shaders and program created externally.
 
@@ -138,7 +138,7 @@ export class Renderer {
     Object.keys(attribs).forEach(attribName => {
 
       switch (attribName) {
-      case "a_position": {
+      case 'a_position': {
         glContext.enableVertexAttribArray(attribSetters[attribName].location);
 
         glContext.bindBuffer(glContext.ARRAY_BUFFER, attribs[attribName].buffer);

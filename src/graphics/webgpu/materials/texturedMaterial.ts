@@ -1,10 +1,10 @@
-import { Material } from "../material";
-import { MaterialImplementation } from "../materialImplementation";
+import { Material } from '../material';
+import { MaterialImplementation } from '../materialImplementation';
 
-import { shaderSources } from "../shaders/sources/shader_sources";
+import { shaderSources } from '../shaders/sources/shader_sources';
 
-import { Mesh } from "../mesh";
-import { Texture } from "../texture";
+import { Mesh } from '../mesh';
+import { Texture } from '../texture';
 
 export class TexturedMaterial extends Material {
 
@@ -20,13 +20,13 @@ export class TexturedMaterial extends Material {
                 // position
                 shaderLocation: 0,
                 offset: Mesh.PositionOffset,
-                format: "float32x4" as GPUVertexFormat
+                format: 'float32x4' as GPUVertexFormat
               },
               {
                 // uv
                 shaderLocation: 1,
                 offset: Mesh.UVOffset,
-                format: "float32x2" as GPUVertexFormat
+                format: 'float32x2' as GPUVertexFormat
               }
             ]
           }
@@ -34,10 +34,10 @@ export class TexturedMaterial extends Material {
       },
       fragment: {
         shaderSource: shaderSources.textured.fragment,
-        format: "bgra8unorm"
+        format: 'bgra8unorm'
       },
       primitive: {
-        topology: "triangle-list"
+        topology: 'triangle-list'
       }
     },
     {
@@ -47,7 +47,7 @@ export class TexturedMaterial extends Material {
           binding: 0,
           visibility: GPUShaderStage.VERTEX,
           buffer: {
-            type: "uniform" as GPUBufferBindingType
+            type: 'uniform' as GPUBufferBindingType
           }
         },
         {
@@ -55,7 +55,7 @@ export class TexturedMaterial extends Material {
           binding: 1,
           visibility: GPUShaderStage.FRAGMENT,
           sampler: {
-            type: "filtering" as GPUSamplerBindingType
+            type: 'filtering' as GPUSamplerBindingType
           }
         },
         {
@@ -63,7 +63,7 @@ export class TexturedMaterial extends Material {
           binding: 2,
           visibility: GPUShaderStage.FRAGMENT,
           texture: {
-            sampleType: "float" as GPUTextureSampleType
+            sampleType: 'float' as GPUTextureSampleType
           }
         }
       ]
@@ -99,8 +99,8 @@ export class TexturedMaterialImplementation extends MaterialImplementation {
     if (this._sampler) return this._sampler;
 
     this._sampler = device.createSampler({
-      magFilter: "linear",
-      minFilter: "linear"
+      magFilter: 'linear',
+      minFilter: 'linear'
     });
 
     return this._sampler;

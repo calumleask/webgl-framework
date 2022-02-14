@@ -51,14 +51,14 @@ export abstract class Material {
         module: device.createShaderModule({
           code: pipelineState.vertex.shaderSource
         }),
-        entryPoint: "main",
+        entryPoint: 'main',
         buffers: pipelineState.vertex.buffers,
       },
       fragment: {
         module: device.createShaderModule({
           code: pipelineState.fragment.shaderSource
         }),
-        entryPoint: "main",
+        entryPoint: 'main',
         targets: [
           {
             format: pipelineState.fragment.format
@@ -67,12 +67,12 @@ export abstract class Material {
       },
       primitive: {
         topology: pipelineState.primitive.topology,
-        cullMode: "back"
+        cullMode: 'back'
       },
       depthStencil: {
         depthWriteEnabled: true,
-        depthCompare: "less",
-        format: "depth24plus-stencil8"
+        depthCompare: 'less',
+        format: 'depth24plus-stencil8'
       }
     });
 

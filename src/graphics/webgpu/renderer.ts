@@ -1,9 +1,9 @@
 
 // TODO: move
-import { WebGPUCanvas as Canvas } from "./canvas";
-import { MeshDataBuffers } from "./meshDataBuffers";
-import { ICamera } from "../../camera/ICamera";
-import { Scene } from "./scene";
+import { WebGPUCanvas as Canvas } from './canvas';
+import { MeshDataBuffers } from './meshDataBuffers';
+import { ICamera } from '../../camera/ICamera';
+import { Scene } from './scene';
 
 export class Renderer {
   private _context: GPUCanvasContext;
@@ -49,7 +49,7 @@ export class Renderer {
             width: canvas.getCanvasSizefv()[0],
             height: canvas.getCanvasSizefv()[1],
           },
-          format: "depth24plus-stencil8",
+          format: 'depth24plus-stencil8',
           usage: GPUTextureUsage.RENDER_ATTACHMENT,
         });
 
@@ -59,23 +59,23 @@ export class Renderer {
               view: undefinedGPUTextureView,
 
               clearValue: { r: 0.0, g: 0.0, b: 0.0, a: 1.0 },
-              loadOp: "clear" as GPULoadOp,
-              loadValue: "clear" as GPULoadOp, // TODO: remove once removed from type or is made optional
-              storeOp: "store" as GPUStoreOp
+              loadOp: 'clear' as GPULoadOp,
+              loadValue: 'clear' as GPULoadOp, // TODO: remove once removed from type or is made optional
+              storeOp: 'store' as GPUStoreOp
             }
           ],
           depthStencilAttachment: {
             view: depthTexture.createView(),
 
-            depthLoadValue: "clear" as GPULoadOp, // TODO: remove once removed from type or is made optional
-            depthLoadOp: "clear" as GPULoadOp,
+            depthLoadValue: 'clear' as GPULoadOp, // TODO: remove once removed from type or is made optional
+            depthLoadOp: 'clear' as GPULoadOp,
             depthClearValue: 1.0,
-            depthStoreOp: "store" as GPUStoreOp,
+            depthStoreOp: 'store' as GPUStoreOp,
 
             stencilLoadValue: 0,
-            stencilLoadOp: "clear" as GPULoadOp,
+            stencilLoadOp: 'clear' as GPULoadOp,
             stencilClearValue: 0,
-            stencilStoreOp: "store" as GPUStoreOp,
+            stencilStoreOp: 'store' as GPUStoreOp,
           },
         };
 
@@ -89,22 +89,22 @@ export class Renderer {
   /** @internal */
   private async _init(canvas: Canvas): Promise<{ adapter: GPUAdapter; context: GPUCanvasContext; device: GPUDevice; }> {
     if (!navigator.gpu) {
-      throw Error("WebGPU is not supported/enabled in your browser.");
+      throw Error('WebGPU is not supported/enabled in your browser.');
     }
 
     const adapter = await navigator.gpu.requestAdapter();
     if (!adapter) {
-      throw Error("WebGPU is not supported/enabled in your browser.");
+      throw Error('WebGPU is not supported/enabled in your browser.');
     }
 
     const device = await adapter.requestDevice();
     if (!device) {
-      throw Error("WebGPU is not supported/enabled in your browser.");
+      throw Error('WebGPU is not supported/enabled in your browser.');
     }
 
     const context = canvas.getContext();
     if (!context) {
-      throw Error("WebGPU is not supported/enabled in your browser.");
+      throw Error('WebGPU is not supported/enabled in your browser.');
     }
 
     return {
@@ -197,4 +197,4 @@ export class Renderer {
   }
 }
 
-const undefinedGPUTextureView: GPUTextureView = { label: undefined, __brand: "GPUTextureView" };
+const undefinedGPUTextureView: GPUTextureView = { label: undefined, __brand: 'GPUTextureView' };

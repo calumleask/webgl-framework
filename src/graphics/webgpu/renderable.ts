@@ -1,7 +1,7 @@
-import { mat4, vec3 } from "gl-matrix";
+import { mat4, vec3 } from 'gl-matrix';
 
-import { MaterialImplementation } from "./materialImplementation";
-import { Mesh } from "./mesh";
+import { MaterialImplementation } from './materialImplementation';
+import { Mesh } from './mesh';
 
 export class Renderable {
   private _mesh: Mesh;

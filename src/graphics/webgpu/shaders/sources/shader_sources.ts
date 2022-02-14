@@ -1,8 +1,8 @@
-import { basicVertexSource } from "./vertex/basic";
-import { texturedVertexSource } from "./vertex/textured";
+import { basicVertexSource } from './vertex/basic';
+import { texturedVertexSource } from './vertex/textured';
 
-import { basicFragmentSource } from "./fragment/basic";
-import { texturedFragmentSource } from "./fragment/textured";
+import { basicFragmentSource } from './fragment/basic';
+import { texturedFragmentSource } from './fragment/textured';
 
 // TODO: create a method
 export const shaderSources = {

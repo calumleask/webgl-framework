@@ -1,9 +1,9 @@
-import { Material } from "../material";
-import { MaterialImplementation } from "../materialImplementation";
+import { Material } from '../material';
+import { MaterialImplementation } from '../materialImplementation';
 
-import { shaderSources } from "../shaders/sources/shader_sources";
+import { shaderSources } from '../shaders/sources/shader_sources';
 
-import { Mesh } from "../mesh";
+import { Mesh } from '../mesh';
 
 export class BasicMaterial extends Material {
 
@@ -19,13 +19,13 @@ export class BasicMaterial extends Material {
                 // position
                 shaderLocation: 0,
                 offset: Mesh.PositionOffset,
-                format: "float32x4" as GPUVertexFormat
+                format: 'float32x4' as GPUVertexFormat
               },
               {
                 // color
                 shaderLocation: 1,
                 offset: Mesh.ColorOffset,
-                format: "float32x4" as GPUVertexFormat
+                format: 'float32x4' as GPUVertexFormat
               }
             ]
           }
@@ -33,10 +33,10 @@ export class BasicMaterial extends Material {
       },
       fragment: {
         shaderSource: shaderSources.basic.fragment,
-        format: "bgra8unorm"
+        format: 'bgra8unorm'
       },
       primitive: {
-        topology: "triangle-list"
+        topology: 'triangle-list'
       }
     });
   }

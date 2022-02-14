@@ -17,7 +17,7 @@ export class Texture {
   /** @internal */
   _init(device: GPUDevice): void {
     if (this._texture) return;
-    if (this._imageBitmapOrUrl && typeof this._imageBitmapOrUrl === "string") {
+    if (this._imageBitmapOrUrl && typeof this._imageBitmapOrUrl === 'string') {
       Texture._loadImage(this._imageBitmapOrUrl)
         .then((bitmap) => {
           this._texture = Texture._createTextureFromBitmap(device, bitmap);
@@ -45,7 +45,7 @@ export class Texture {
   /** @internal */
   private static async _loadImage(src: string): Promise<ImageBitmap> {
     return new Promise((resolve, reject) => {
-      const img = document.createElement("img");
+      const img = document.createElement('img');
       img.src = src;
       img.decode()
         .then(() => {
@@ -73,7 +73,7 @@ export class Texture {
     const { width, height } = bitmap;
     const texture = device.createTexture({
       size: [width, height, 1],
-      format: "rgba8unorm",
+      format: 'rgba8unorm',
       usage:
         GPUTextureUsage.TEXTURE_BINDING |
         GPUTextureUsage.COPY_DST |
@@ -100,7 +100,7 @@ export class Texture {
     if (!Texture._defaultTexture) {
       Texture._defaultTexture = device.createTexture({
         size: [1, 1, 1],
-        format: "rgba8unorm",
+        format: 'rgba8unorm',
         usage:
           GPUTextureUsage.TEXTURE_BINDING |
           GPUTextureUsage.COPY_DST |
