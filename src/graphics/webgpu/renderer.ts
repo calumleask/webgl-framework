@@ -86,9 +86,7 @@ export class Renderer {
   }
 
   /** @internal */
-  private async _init(
-    canvas: Canvas,
-  ): Promise<{
+  private async _init(canvas: Canvas): Promise<{
     adapter: GPUAdapter;
     context: GPUCanvasContext;
     device: GPUDevice;

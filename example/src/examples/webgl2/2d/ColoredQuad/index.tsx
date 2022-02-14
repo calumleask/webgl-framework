@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
-import * as glfw from "webgl-framework";
+import * as glfw from 'webgl-framework';
 
 export const ColoredQuadExample: React.FC = () => {
-
   useEffect(() => {
     const canvas = new glfw.graphics.webgl2.Canvas();
     const renderer = new glfw.graphics.webgl2.Renderer();
@@ -15,7 +14,7 @@ export const ColoredQuadExample: React.FC = () => {
     console.log(scene);
     console.log(square);
 
-    canvas.init("glCanvas");
+    canvas.init('glCanvas');
 
     renderer.init(canvas);
 
