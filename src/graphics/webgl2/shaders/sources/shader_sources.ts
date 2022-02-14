@@ -9,14 +9,14 @@ import { texturedFragmentSource } from './fragment/textured';
 export const shaderSources = {
   basic: {
     vertex: basicVertexSource,
-    fragment: basicFragmentSource
+    fragment: basicFragmentSource,
   },
   colored: {
     vertex: basicVertexSource,
-    fragment: coloredFragmentSource
+    fragment: coloredFragmentSource,
   },
   textured: {
     vertex: texturedVertexSource,
-    fragment: texturedFragmentSource
-  }
+    fragment: texturedFragmentSource,
+  },
 };

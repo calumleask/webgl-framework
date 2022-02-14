@@ -1,4 +1,3 @@
-
 export const texturedFragmentSource = `
   @binding(1) @group(0) var mySampler: sampler;
   @binding(2) @group(0) var myTexture: texture_2d<f32>;

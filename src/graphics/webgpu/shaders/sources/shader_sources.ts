@@ -8,10 +8,10 @@ import { texturedFragmentSource } from './fragment/textured';
 export const shaderSources = {
   basic: {
     vertex: basicVertexSource,
-    fragment: basicFragmentSource
+    fragment: basicFragmentSource,
   },
   textured: {
     vertex: texturedVertexSource,
-    fragment: texturedFragmentSource
-  }
+    fragment: texturedFragmentSource,
+  },
 };

@@ -1,4 +1,3 @@
-
 // TODO: move
 import { WebGPUCanvas as Canvas } from './canvas';
 import { MeshDataBuffers } from './meshDataBuffers';
@@ -61,8 +60,8 @@ export class Renderer {
               clearValue: { r: 0.0, g: 0.0, b: 0.0, a: 1.0 },
               loadOp: 'clear' as GPULoadOp,
               loadValue: 'clear' as GPULoadOp, // TODO: remove once removed from type or is made optional
-              storeOp: 'store' as GPUStoreOp
-            }
+              storeOp: 'store' as GPUStoreOp,
+            },
           ],
           depthStencilAttachment: {
             view: depthTexture.createView(),
@@ -87,7 +86,13 @@ export class Renderer {
   }
 
   /** @internal */
-  private async _init(canvas: Canvas): Promise<{ adapter: GPUAdapter; context: GPUCanvasContext; device: GPUDevice; }> {
+  private async _init(
+    canvas: Canvas,
+  ): Promise<{
+    adapter: GPUAdapter;
+    context: GPUCanvasContext;
+    device: GPUDevice;
+  }> {
     if (!navigator.gpu) {
       throw Error('WebGPU is not supported/enabled in your browser.');
     }
@@ -108,7 +113,9 @@ export class Renderer {
     }
 
     return {
-      adapter, context, device
+      adapter,
+      context,
+      device,
     };
   }
 
@@ -137,37 +144,47 @@ export class Renderer {
     const viewMatrix = camera.getViewMatrix();
     const projectionMatrix = camera.getProjectionMatrix();
 
-    scene.getRenderables().forEach(renderable => {
+    scene.getRenderables().forEach((renderable) => {
       // TODO: use a dirty flag
       renderable._updateMatrix(viewMatrix, projectionMatrix);
     });
 
-    this._renderPassDesc.colorAttachments[0].view = this._context.getCurrentTexture().createView();
+    this._renderPassDesc.colorAttachments[0].view = this._context
+      .getCurrentTexture()
+      .createView();
 
     const commandEncoder = this._device.createCommandEncoder();
     // TODO: Is this per material?
 
-    for (const { meshRenderableMap, materialImplementation } of scene.getSharedMaterialMeshRenderables()) {
+    for (const {
+      meshRenderableMap,
+      materialImplementation,
+    } of scene.getSharedMaterialMeshRenderables()) {
       const passEncoder = commandEncoder.beginRenderPass(this._renderPassDesc);
 
       const uniformBuffer = materialImplementation._getUniformBuffer();
       if (!uniformBuffer) return;
 
-      const renderPipeline = materialImplementation._getMaterialRenderPipeline();
+      const renderPipeline =
+        materialImplementation._getMaterialRenderPipeline();
       if (!renderPipeline) return;
 
       passEncoder.setPipeline(renderPipeline);
 
-      for (const [mesh, renderables] of Array.from(meshRenderableMap.entries())) {
-
+      for (const [mesh, renderables] of Array.from(
+        meshRenderableMap.entries(),
+      )) {
         const offset = 256;
 
-        const dataBuffer = this._dataBuffers.getBuffer(mesh.getVertexBufferId());
+        const dataBuffer = this._dataBuffers.getBuffer(
+          mesh.getVertexBufferId(),
+        );
         if (!dataBuffer) return;
         passEncoder.setVertexBuffer(0, dataBuffer);
 
         renderables.forEach((renderable, index) => {
-          const modelViewProjectionMatrix = renderable._getModelViewProjectionMatrix();
+          const modelViewProjectionMatrix =
+            renderable._getModelViewProjectionMatrix();
           if (!modelViewProjectionMatrix) return;
 
           this._device.queue.writeBuffer(
@@ -175,7 +192,7 @@ export class Renderer {
             index * offset,
             modelViewProjectionMatrix.buffer,
             modelViewProjectionMatrix.byteOffset,
-            modelViewProjectionMatrix.byteLength
+            modelViewProjectionMatrix.byteLength,
           );
 
           const uniformBindGroup = renderable._getUniformBindGroup();
@@ -184,8 +201,6 @@ export class Renderer {
           passEncoder.setBindGroup(0, uniformBindGroup);
           passEncoder.draw(mesh.getVertexCount(), 1, 0, 0);
         });
-
-
       }
 
       // TODO: Is this per material?
@@ -193,8 +208,10 @@ export class Renderer {
 
       this._device.queue.submit([commandEncoder.finish()]);
     }
-
   }
 }
 
-const undefinedGPUTextureView: GPUTextureView = { label: undefined, __brand: 'GPUTextureView' };
+const undefinedGPUTextureView: GPUTextureView = {
+  label: undefined,
+  __brand: 'GPUTextureView',
+};

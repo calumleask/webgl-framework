@@ -1,4 +1,3 @@
-
 type OnLoadCallback = () => void;
 
 export class Texture {
@@ -24,11 +23,16 @@ export class Texture {
           if (this._onLoadCallback) this._onLoadCallback();
         })
         .catch((err) => {
-          console.error(`Error: Could not load texture at source ${this._imageBitmapOrUrl}`, err);
+          console.error(
+            `Error: Could not load texture at source ${this._imageBitmapOrUrl}`,
+            err,
+          );
         });
-    }
-    else if (this._imageBitmapOrUrl instanceof ImageBitmap) {
-      this._texture = Texture._createTextureFromBitmap(device, this._imageBitmapOrUrl);
+    } else if (this._imageBitmapOrUrl instanceof ImageBitmap) {
+      this._texture = Texture._createTextureFromBitmap(
+        device,
+        this._imageBitmapOrUrl,
+      );
     }
   }
 
@@ -47,7 +51,8 @@ export class Texture {
     return new Promise((resolve, reject) => {
       const img = document.createElement('img');
       img.src = src;
-      img.decode()
+      img
+        .decode()
         .then(() => {
           createImageBitmap(img)
             .then((bitmap) => {
@@ -64,8 +69,10 @@ export class Texture {
   }
 
   /** @internal */
-  private static _createTextureFromBitmap(device: GPUDevice, bitmap: ImageBitmap): GPUTexture {
-
+  private static _createTextureFromBitmap(
+    device: GPUDevice,
+    bitmap: ImageBitmap,
+  ): GPUTexture {
     // if (!this._imageBitmap) {
     //   this._imageBitmap = await createImageBitmap(new ImageData(new Uint8ClampedArray([255, 128, 128, 255]), 1, 1));
     // }
@@ -83,12 +90,12 @@ export class Texture {
     if (bitmap) {
       device.queue.copyExternalImageToTexture(
         {
-          source: bitmap
+          source: bitmap,
         },
         {
-          texture: texture
+          texture: texture,
         },
-        [width, height, 1]
+        [width, height, 1],
       );
     }
 
@@ -109,5 +116,4 @@ export class Texture {
     }
     return Texture._defaultTexture;
   }
-
 }

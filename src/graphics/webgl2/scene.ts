@@ -31,7 +31,7 @@ export class Scene {
     if (typeof layerId === 'number') layerId = layerId.toString();
     if (!this._layerExists(layerId)) {
       this._layers[layerId] = {
-        objectsToDraw: []
+        objectsToDraw: [],
       };
     }
     return this._layers[layerId];
@@ -44,19 +44,28 @@ export class Scene {
     }
   }
 
-  addObjectToLayer<T extends Renderable>(layerId: number | string, object: T): void {
+  addObjectToLayer<T extends Renderable>(
+    layerId: number | string,
+    object: T,
+  ): void {
     const layer = this._ensureLayer(layerId);
     layer.objectsToDraw.push(object);
   }
 
-  addObjectsToLayer<T extends Renderable>(layerId: number | string, objects: T[]): void {
+  addObjectsToLayer<T extends Renderable>(
+    layerId: number | string,
+    objects: T[],
+  ): void {
     const layer = this._ensureLayer(layerId);
-    objects.forEach(object => {
+    objects.forEach((object) => {
       layer.objectsToDraw.push(object);
     });
   }
 
-  removeObjectFromLayer<T extends Renderable>(layerId: number | string, object: T): void {
+  removeObjectFromLayer<T extends Renderable>(
+    layerId: number | string,
+    object: T,
+  ): void {
     if (this._layerExists(layerId)) {
       const layer = this._getLayer(layerId);
       const index = layer.objectsToDraw.indexOf(object);

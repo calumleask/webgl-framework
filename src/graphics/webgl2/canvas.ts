@@ -1,7 +1,7 @@
 import { Vec2 } from '../../math';
 
 export class WebGLCanvas {
-  private _canvas:  HTMLCanvasElement | null;
+  private _canvas: HTMLCanvasElement | null;
   private _gl: WebGL2RenderingContext | null;
 
   constructor() {
@@ -18,7 +18,9 @@ export class WebGLCanvas {
 
     // Only continue if WebGL is available and working
     if (!this._gl) {
-      console.error('Unable to initialize WebGL2. Your browser or machine may not support it.');
+      console.error(
+        'Unable to initialize WebGL2. Your browser or machine may not support it.',
+      );
       return;
     }
   }

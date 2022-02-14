@@ -16,7 +16,7 @@ export class Quad implements Renderable {
     return {
       u_translation: this._position,
       u_scale: this._scale,
-      u_color: this._color
+      u_color: this._color,
     };
   }
 
