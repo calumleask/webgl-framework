@@ -28,7 +28,7 @@ export const RotatingAroundLocalAxisExample: React.FC = () => {
       z: [0, 0, 1],
     };
 
-    window.addEventListener('keydown', (e) => {
+    window.addEventListener('keydown', e => {
       if (e.repeat) return;
       switch (e.key) {
         case 'x':

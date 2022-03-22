@@ -80,7 +80,7 @@ export class Scene {
   }
 
   addRenderables(renderables: Renderable[]): void {
-    renderables.forEach((renderable) => {
+    renderables.forEach(renderable => {
       this.addRenderable(renderable);
     });
   }

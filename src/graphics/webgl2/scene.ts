@@ -57,7 +57,7 @@ export class Scene {
     objects: T[],
   ): void {
     const layer = this._ensureLayer(layerId);
-    objects.forEach((object) => {
+    objects.forEach(object => {
       layer.objectsToDraw.push(object);
     });
   }

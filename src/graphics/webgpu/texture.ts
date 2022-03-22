@@ -18,11 +18,11 @@ export class Texture {
     if (this._texture) return;
     if (this._imageBitmapOrUrl && typeof this._imageBitmapOrUrl === 'string') {
       Texture._loadImage(this._imageBitmapOrUrl)
-        .then((bitmap) => {
+        .then(bitmap => {
           this._texture = Texture._createTextureFromBitmap(device, bitmap);
           if (this._onLoadCallback) this._onLoadCallback();
         })
-        .catch((err) => {
+        .catch(err => {
           console.error(
             `Error: Could not load texture at source ${this._imageBitmapOrUrl}`,
             err,
@@ -55,14 +55,14 @@ export class Texture {
         .decode()
         .then(() => {
           createImageBitmap(img)
-            .then((bitmap) => {
+            .then(bitmap => {
               resolve(bitmap);
             })
-            .catch((err) => {
+            .catch(err => {
               reject(err);
             });
         })
-        .catch((err) => {
+        .catch(err => {
           reject(err);
         });
     });

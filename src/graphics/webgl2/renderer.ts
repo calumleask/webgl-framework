@@ -155,7 +155,7 @@ export class Renderer {
     if (!vertexArrayObject) return null;
     glContext.bindVertexArray(vertexArrayObject);
 
-    Object.keys(attribs).forEach((attribName) => {
+    Object.keys(attribs).forEach(attribName => {
       switch (attribName) {
         case 'a_position': {
           glContext.enableVertexAttribArray(attribSetters[attribName].location);
@@ -192,7 +192,7 @@ export class Renderer {
     programInfo: ProgramInfo,
     uniforms: Uniforms,
   ): void {
-    Object.keys(uniforms).forEach((name) => {
+    Object.keys(uniforms).forEach(name => {
       const uniformSetter = programInfo.uniformSetters[name];
       if (uniformSetter) {
         switch (uniformSetter.type) {
@@ -243,10 +243,10 @@ export class Renderer {
     const offset = 0;
     const count = 6;
 
-    scene.getLayerIds().forEach((layerId) => {
+    scene.getLayerIds().forEach(layerId => {
       const objects = scene.getObjectsToDrawForLayer(layerId);
 
-      objects.forEach((object) => {
+      objects.forEach(object => {
         this._setUniforms(glContext, programInfo, object.getUniforms());
 
         glContext.drawArrays(primitiveType, offset, count);

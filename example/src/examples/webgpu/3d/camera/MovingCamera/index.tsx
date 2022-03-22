@@ -22,7 +22,7 @@ export const MovingCameraExample: React.FC = () => {
     );
     scene.addRenderable(renderable);
 
-    window.addEventListener('keydown', (e) => {
+    window.addEventListener('keydown', e => {
       if (e.repeat) return;
       switch (e.key) {
         case 'w': {
