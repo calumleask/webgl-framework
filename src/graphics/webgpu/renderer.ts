@@ -45,8 +45,9 @@ export class Renderer {
 
         const depthTexture = this._device.createTexture({
           size: {
-            width: canvas.getCanvasSizefv()[0],
-            height: canvas.getCanvasSizefv()[1],
+            // TODO: remove duplication from above
+            width: canvas.getCanvasSizefv()[0] * devicePixelRatio,
+            height: canvas.getCanvasSizefv()[1] * devicePixelRatio,
           },
           format: 'depth24plus-stencil8',
           usage: GPUTextureUsage.RENDER_ATTACHMENT,
@@ -80,7 +81,7 @@ export class Renderer {
 
         this._dataBuffers = new MeshDataBuffers(this._device);
       })
-      .catch((err) => {
+      .catch(err => {
         console.error(err);
       });
   }
@@ -142,7 +143,7 @@ export class Renderer {
     const viewMatrix = camera.getViewMatrix();
     const projectionMatrix = camera.getProjectionMatrix();
 
-    scene.getRenderables().forEach((renderable) => {
+    scene.getRenderables().forEach(renderable => {
       // TODO: use a dirty flag
       renderable._updateMatrix(viewMatrix, projectionMatrix);
     });
