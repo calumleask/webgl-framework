@@ -1,11 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
-import wgf from "webgl-framework";
+import * as wgf from 'webgl-framework';
 
 export const TexturedCubeExample: React.FC = () => {
-
   useEffect(() => {
-    const canvas = new wgf.graphics.webgpu.Canvas("glCanvas");
+    const canvas = new wgf.graphics.webgpu.Canvas('glCanvas');
     const renderer = new wgf.graphics.webgpu.Renderer(canvas);
 
     const camera = new wgf.camera.PerspectiveCamera(75, canvas.getAspect())
@@ -14,10 +13,13 @@ export const TexturedCubeExample: React.FC = () => {
 
     const scene = new wgf.graphics.webgpu.Scene();
     const cubeMesh = new wgf.graphics.webgpu.CubeMesh();
-    const texture = new wgf.graphics.webgpu.Texture("square_texture.png");
+    const texture = new wgf.graphics.webgpu.Texture('square_texture.png');
     const texturedMaterial = new wgf.graphics.webgpu.TexturedMaterial();
     texturedMaterial.setTexture(texture);
-    const renderable = new wgf.graphics.webgpu.Renderable(cubeMesh, texturedMaterial);
+    const renderable = new wgf.graphics.webgpu.Renderable(
+      cubeMesh,
+      texturedMaterial,
+    );
     scene.addRenderable(renderable);
 
     const frame = (): void => {

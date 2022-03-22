@@ -1,13 +1,13 @@
-
 // TODO: move
-import { WebGPUCanvas as Canvas } from "./canvas";
-import { MeshDataBuffers } from "./meshDataBuffers";
-import { ICamera } from "../../camera/ICamera";
-import { Scene } from "./scene";
+import { WebGPUCanvas as Canvas } from './canvas';
+import { MeshDataBuffers } from './meshDataBuffers';
+import { ICamera } from '../../camera/ICamera';
+import { Scene } from './scene';
 
 export class Renderer {
+  private _context: GPUCanvasContext;
+
   private _device: GPUDevice;
-  private _swapChain: GPUSwapChain;
 
   private _dataBuffers: MeshDataBuffers;
 
@@ -23,22 +23,33 @@ export class Renderer {
     this._ready = false;
 
     this._init(canvas)
-      .then(({ context, device }) => {
+      .then(({ adapter, context, device }) => {
+        this._context = context;
         this._ready = true;
         this._device = device;
 
+        // TODO: move inside canvas
+        const devicePixelRatio = window.devicePixelRatio || 1;
+        const size = [
+          canvas.getCanvasSizefv()[0] * devicePixelRatio,
+          canvas.getCanvasSizefv()[1] * devicePixelRatio,
+        ];
+
+        const format = context.getPreferredFormat(adapter);
         // Setup render outputs
-        this._swapChain = context.configureSwapChain({
+        this._context.configure({
           device: this._device,
-          format: "bgra8unorm"
+          format: format,
+          size: size,
         });
 
         const depthTexture = this._device.createTexture({
           size: {
-            width: canvas.getCanvasSizefv()[0],
-            height: canvas.getCanvasSizefv()[1],
+            // TODO: remove duplication from above
+            width: canvas.getCanvasSizefv()[0] * devicePixelRatio,
+            height: canvas.getCanvasSizefv()[1] * devicePixelRatio,
           },
-          format: "depth24plus-stencil8",
+          format: 'depth24plus-stencil8',
           usage: GPUTextureUsage.RENDER_ATTACHMENT,
         });
 
@@ -46,50 +57,64 @@ export class Renderer {
           colorAttachments: [
             {
               view: undefinedGPUTextureView,
-              loadValue: { r: 0.0, g: 0.0, b: 0.0, a: 1.0 },
-              storeOp: "store" as GPUStoreOp
-            }
+
+              clearValue: { r: 0.0, g: 0.0, b: 0.0, a: 1.0 },
+              loadOp: 'clear' as GPULoadOp,
+              loadValue: 'clear' as GPULoadOp, // TODO: remove once removed from type or is made optional
+              storeOp: 'store' as GPUStoreOp,
+            },
           ],
           depthStencilAttachment: {
             view: depthTexture.createView(),
 
-            depthLoadValue: 1.0,
-            depthStoreOp: "store" as GPUStoreOp,
+            depthLoadValue: 'clear' as GPULoadOp, // TODO: remove once removed from type or is made optional
+            depthLoadOp: 'clear' as GPULoadOp,
+            depthClearValue: 1.0,
+            depthStoreOp: 'store' as GPUStoreOp,
+
             stencilLoadValue: 0,
-            stencilStoreOp: "store" as GPUStoreOp,
+            stencilLoadOp: 'clear' as GPULoadOp,
+            stencilClearValue: 0,
+            stencilStoreOp: 'store' as GPUStoreOp,
           },
         };
 
         this._dataBuffers = new MeshDataBuffers(this._device);
       })
-      .catch((err) => {
+      .catch(err => {
         console.error(err);
       });
   }
 
   /** @internal */
-  private async _init(canvas: Canvas): Promise<{ context: GPUCanvasContext, device: GPUDevice }> {
+  private async _init(canvas: Canvas): Promise<{
+    adapter: GPUAdapter;
+    context: GPUCanvasContext;
+    device: GPUDevice;
+  }> {
     if (!navigator.gpu) {
-      throw Error("WebGPU is not supported/enabled in your browser.");
+      throw Error('WebGPU is not supported/enabled in your browser.');
     }
 
     const adapter = await navigator.gpu.requestAdapter();
     if (!adapter) {
-      throw Error("WebGPU is not supported/enabled in your browser.");
+      throw Error('WebGPU is not supported/enabled in your browser.');
     }
 
     const device = await adapter.requestDevice();
     if (!device) {
-      throw Error("WebGPU is not supported/enabled in your browser.");
+      throw Error('WebGPU is not supported/enabled in your browser.');
     }
 
     const context = canvas.getContext();
     if (!context) {
-      throw Error("WebGPU is not supported/enabled in your browser.");
+      throw Error('WebGPU is not supported/enabled in your browser.');
     }
 
     return {
-      context, device
+      adapter,
+      context,
+      device,
     };
   }
 
@@ -123,32 +148,42 @@ export class Renderer {
       renderable._updateMatrix(viewMatrix, projectionMatrix);
     });
 
-    this._renderPassDesc.colorAttachments[0].view = this._swapChain.getCurrentTexture().createView();
+    this._renderPassDesc.colorAttachments[0].view = this._context
+      .getCurrentTexture()
+      .createView();
 
     const commandEncoder = this._device.createCommandEncoder();
     // TODO: Is this per material?
 
-    for (const { meshRenderableMap, materialImplementation } of scene.getSharedMaterialMeshRenderables()) {
+    for (const {
+      meshRenderableMap,
+      materialImplementation,
+    } of scene.getSharedMaterialMeshRenderables()) {
       const passEncoder = commandEncoder.beginRenderPass(this._renderPassDesc);
 
       const uniformBuffer = materialImplementation._getUniformBuffer();
       if (!uniformBuffer) return;
 
-      const renderPipeline = materialImplementation._getMaterialRenderPipeline();
+      const renderPipeline =
+        materialImplementation._getMaterialRenderPipeline();
       if (!renderPipeline) return;
 
       passEncoder.setPipeline(renderPipeline);
 
-      for (const [mesh, renderables] of Array.from(meshRenderableMap.entries())) {
-
+      for (const [mesh, renderables] of Array.from(
+        meshRenderableMap.entries(),
+      )) {
         const offset = 256;
 
-        const dataBuffer = this._dataBuffers.getBuffer(mesh.getVertexBufferId());
+        const dataBuffer = this._dataBuffers.getBuffer(
+          mesh.getVertexBufferId(),
+        );
         if (!dataBuffer) return;
         passEncoder.setVertexBuffer(0, dataBuffer);
 
         renderables.forEach((renderable, index) => {
-          const modelViewProjectionMatrix = renderable._getModelViewProjectionMatrix();
+          const modelViewProjectionMatrix =
+            renderable._getModelViewProjectionMatrix();
           if (!modelViewProjectionMatrix) return;
 
           this._device.queue.writeBuffer(
@@ -156,7 +191,7 @@ export class Renderer {
             index * offset,
             modelViewProjectionMatrix.buffer,
             modelViewProjectionMatrix.byteOffset,
-            modelViewProjectionMatrix.byteLength
+            modelViewProjectionMatrix.byteLength,
           );
 
           const uniformBindGroup = renderable._getUniformBindGroup();
@@ -165,17 +200,17 @@ export class Renderer {
           passEncoder.setBindGroup(0, uniformBindGroup);
           passEncoder.draw(mesh.getVertexCount(), 1, 0, 0);
         });
-
-
       }
 
       // TODO: Is this per material?
-      passEncoder.endPass();
+      passEncoder.end();
 
       this._device.queue.submit([commandEncoder.finish()]);
     }
-
   }
 }
 
-const undefinedGPUTextureView: GPUTextureView = { label: null, __brand: "GPUTextureView" };
+const undefinedGPUTextureView: GPUTextureView = {
+  label: undefined,
+  __brand: 'GPUTextureView',
+};

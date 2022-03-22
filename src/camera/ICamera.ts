@@ -1,9 +1,7 @@
-import { mat4 } from "gl-matrix";
+import { mat4 } from 'gl-matrix';
 
 export interface ICamera {
+  getViewMatrix: () => mat4;
 
-  getViewMatrix: () => mat4
-
-  getProjectionMatrix: () => mat4
-
+  getProjectionMatrix: () => mat4;
 }

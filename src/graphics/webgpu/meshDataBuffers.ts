@@ -1,4 +1,3 @@
-
 let nextBufferId = 0;
 const getNextBufferId = (): number => {
   return ++nextBufferId;
@@ -9,7 +8,7 @@ export class MeshDataBuffers {
   private _device: GPUDevice;
 
   constructor(device: GPUDevice) {
-    this._buffers = new Map;
+    this._buffers = new Map();
     this._device = device;
   }
 
@@ -17,7 +16,7 @@ export class MeshDataBuffers {
     const buffer = this._device.createBuffer({
       size: vertices.byteLength,
       usage: GPUBufferUsage.VERTEX,
-      mappedAtCreation: true
+      mappedAtCreation: true,
     });
 
     new Float32Array(buffer.getMappedRange()).set(vertices);

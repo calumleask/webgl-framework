@@ -1,5 +1,5 @@
-import { ICamera } from "./ICamera"; 
-import { mat4, vec3 } from "gl-matrix";
+import { ICamera } from './ICamera';
+import { mat4, vec3 } from 'gl-matrix';
 
 export class PerspectiveCamera implements ICamera {
   private _position: vec3;
@@ -23,7 +23,7 @@ export class PerspectiveCamera implements ICamera {
     this._usingFixedFocalPoint = false;
     this._dirty = false;
 
-    const fovRad = fovDeg * Math.PI / 180;
+    const fovRad = (fovDeg * Math.PI) / 180;
     mat4.perspective(this._projectionMatrix, fovRad, aspect, near, far);
 
     vec3.set(this._forward, 0, 0, -1);
@@ -125,9 +125,10 @@ export class PerspectiveCamera implements ICamera {
   private _updateViewMatrix(): void {
     if (this._usingFixedFocalPoint) {
       // Update forward vector
-      this._forward = this._normalize(vec3.subtract(vec3.create(), this._focalPoint, this._position));
-    }
-    else {
+      this._forward = this._normalize(
+        vec3.subtract(vec3.create(), this._focalPoint, this._position),
+      );
+    } else {
       // Update focal point
       vec3.add(this._focalPoint, this._position, this._forward);
     }
@@ -139,5 +140,4 @@ export class PerspectiveCamera implements ICamera {
   private _normalize(vec: vec3): vec3 {
     return vec3.normalize(vec3.create(), vec);
   }
-
 }

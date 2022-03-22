@@ -1,3 +1,2 @@
-
 // 2D
-export { ColoredQuadExample as ColoredQuad } from "./2d/ColoredQuad";
+export { ColoredQuadExample as ColoredQuad } from './2d/ColoredQuad';

@@ -1,7 +1,7 @@
-import { mat4, vec3 } from "gl-matrix";
+import { mat4, vec3 } from 'gl-matrix';
 
-import { MaterialImplementation } from "./materialImplementation";
-import { Mesh } from "./mesh";
+import { MaterialImplementation } from './materialImplementation';
+import { Mesh } from './mesh';
 
 export class Renderable {
   private _mesh: Mesh;
@@ -69,20 +69,34 @@ export class Renderable {
     mat4.multiply(
       this._modelViewProjectionMatrix,
       projectionMatrix,
-      this._modelViewProjectionMatrix
+      this._modelViewProjectionMatrix,
     );
   }
 
   /** @internal */
-  _setupUniformBindGroup(device: GPUDevice, renderPipeline: GPURenderPipeline, uniformBuffer: GPUBuffer, instanceNumber: number): void {
+  _setupUniformBindGroup(
+    device: GPUDevice,
+    renderPipeline: GPURenderPipeline,
+    uniformBuffer: GPUBuffer,
+    instanceNumber: number,
+  ): void {
     const offset = 256; // uniformBindGroup offset must be 256-byte aligned
     // TODO: this is gross
-    this._uniformBindGroup = this._material._createUniformBindGroup(device, renderPipeline, uniformBuffer, offset * instanceNumber);
+    this._uniformBindGroup = this._material._createUniformBindGroup(
+      device,
+      renderPipeline,
+      uniformBuffer,
+      offset * instanceNumber,
+    );
     if (this._material._isReady() === false) {
       this._material._onReady(() => {
-        this._uniformBindGroup = this._material._createUniformBindGroup(device, renderPipeline, uniformBuffer, offset * instanceNumber);
+        this._uniformBindGroup = this._material._createUniformBindGroup(
+          device,
+          renderPipeline,
+          uniformBuffer,
+          offset * instanceNumber,
+        );
       });
     }
   }
-
 }

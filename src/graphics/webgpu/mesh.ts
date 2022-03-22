@@ -1,4 +1,4 @@
-import { Renderer } from "./renderer";
+import { Renderer } from './renderer';
 
 export class Mesh {
   static readonly VertexSize = 4 * 10;
@@ -19,7 +19,9 @@ export class Mesh {
   /** @internal */
   _createVertexBuffer(renderer: Renderer): void {
     if (this._vertexBufferId > -1) return;
-    this._vertexBufferId = renderer._getDataBuffers().createDataBuffer(this._vertexArray);
+    this._vertexBufferId = renderer
+      ._getDataBuffers()
+      .createDataBuffer(this._vertexArray);
   }
 
   getVertexBufferId(): number {
@@ -29,5 +31,4 @@ export class Mesh {
   getVertexCount(): number {
     return this._vertexCount;
   }
-
 }

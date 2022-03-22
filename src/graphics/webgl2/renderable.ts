@@ -1,5 +1,5 @@
-import { Vec2, Vec4 } from "../../math";
-import { Uniforms } from "./uniforms";
+import { Vec2, Vec4 } from '../../math';
+import { Uniforms } from './uniforms';
 
 export type RenderableUniforms = Uniforms & {
   u_translation: Vec2;

@@ -1,18 +1,17 @@
-
 type ProgramableStageBase = {
   shaderSource: string;
-}
+};
 
 type PipelineState = {
   vertex: ProgramableStageBase & {
     buffers?: Iterable<GPUVertexBufferLayout | null>;
-  },
+  };
   fragment: ProgramableStageBase & {
-    swapChainFormat: GPUTextureFormat;
-  },
+    format: GPUTextureFormat;
+  };
   primitive: {
     topology: GPUPrimitiveTopology;
-  }
+  };
 };
 
 export abstract class Material {
@@ -21,7 +20,10 @@ export abstract class Material {
   private _pipelineState: PipelineState;
   private _bindGroupLayoutDescriptor: GPUBindGroupLayoutDescriptor | null;
 
-  constructor(pipelineState: PipelineState, bindGroupLayoutDescriptor: GPUBindGroupLayoutDescriptor | null = null) {
+  constructor(
+    pipelineState: PipelineState,
+    bindGroupLayoutDescriptor: GPUBindGroupLayoutDescriptor | null = null,
+  ) {
     this._renderPipeline = null;
 
     this._pipelineState = pipelineState;
@@ -31,49 +33,59 @@ export abstract class Material {
   /** @internal */
   _setupRenderPipeline(device: GPUDevice): GPURenderPipeline {
     if (!this._renderPipeline) {
-      this._renderPipeline = Material._createPipeline(device, this._pipelineState, this._bindGroupLayoutDescriptor);
+      this._renderPipeline = Material._createPipeline(
+        device,
+        this._pipelineState,
+        this._bindGroupLayoutDescriptor,
+      );
     }
 
     return this._renderPipeline;
   }
 
   /** @internal */
-  private static _createPipeline(device: GPUDevice, pipelineState: PipelineState, bindGroupLayoutDescriptor: GPUBindGroupLayoutDescriptor | null): GPURenderPipeline {
+  private static _createPipeline(
+    device: GPUDevice,
+    pipelineState: PipelineState,
+    bindGroupLayoutDescriptor: GPUBindGroupLayoutDescriptor | null,
+  ): GPURenderPipeline {
     const pipeline = device.createRenderPipeline({
-      ...(
-        bindGroupLayoutDescriptor ? {
-          layout: device.createPipelineLayout({
-            bindGroupLayouts: [device.createBindGroupLayout(bindGroupLayoutDescriptor)],
-          })
-        } : {}
-      ),
+      ...(bindGroupLayoutDescriptor
+        ? {
+            layout: device.createPipelineLayout({
+              bindGroupLayouts: [
+                device.createBindGroupLayout(bindGroupLayoutDescriptor),
+              ],
+            }),
+          }
+        : {}),
       vertex: {
         module: device.createShaderModule({
-          code: pipelineState.vertex.shaderSource
+          code: pipelineState.vertex.shaderSource,
         }),
-        entryPoint: "main",
+        entryPoint: 'main',
         buffers: pipelineState.vertex.buffers,
       },
       fragment: {
         module: device.createShaderModule({
-          code: pipelineState.fragment.shaderSource
+          code: pipelineState.fragment.shaderSource,
         }),
-        entryPoint: "main",
+        entryPoint: 'main',
         targets: [
           {
-            format: pipelineState.fragment.swapChainFormat
-          }
-        ]
+            format: pipelineState.fragment.format,
+          },
+        ],
       },
       primitive: {
         topology: pipelineState.primitive.topology,
-        cullMode: "back"
+        cullMode: 'back',
       },
       depthStencil: {
         depthWriteEnabled: true,
-        depthCompare: "less",
-        format: "depth24plus-stencil8"
-      }
+        depthCompare: 'less',
+        format: 'depth24plus-stencil8',
+      },
     });
 
     return pipeline;
@@ -83,5 +95,4 @@ export abstract class Material {
   _getRenderPipeline(): GPURenderPipeline | null {
     return this._renderPipeline;
   }
-
 }

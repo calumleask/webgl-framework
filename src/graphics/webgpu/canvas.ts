@@ -1,7 +1,7 @@
-import { Vec2 } from "../../math";
+import { Vec2 } from '../../math';
 
 export class WebGPUCanvas {
-  private _canvas:  HTMLCanvasElement | null;
+  private _canvas: HTMLCanvasElement | null;
   private _context: GPUCanvasContext | null;
 
   constructor(canvasId: string) {
@@ -13,13 +13,15 @@ export class WebGPUCanvas {
 
   /** @interval */
   private _init(canvasId: string): void {
-    this._canvas = document.querySelector("#" + canvasId);
+    this._canvas = document.querySelector('#' + canvasId);
     // TODO: check this worked.
 
-    this._context = this._canvas ? this._canvas.getContext("gpupresent") : null;
+    this._context = this._canvas ? this._canvas.getContext('webgpu') : null;
 
     if (!this._context) {
-      console.error("Unable to initialize WebGPU. It may not be supported/enabled in your browser.");
+      console.error(
+        'Unable to initialize WebGPU. It may not be supported/enabled in your browser.',
+      );
     }
   }
 
@@ -33,7 +35,7 @@ export class WebGPUCanvas {
 
   getCanvasSizefv(): Vec2 {
     if (this._canvas) {
-      return [this._canvas.width, this._canvas.height];
+      return [this._canvas.width, this._canvas.height]; // TODO: width vs clientWidth?
     }
     return [-1, -1];
   }

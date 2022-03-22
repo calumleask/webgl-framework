@@ -1,4 +1,4 @@
-import { Material } from "./material";
+import { Material } from './material';
 
 type OnReadyCallback = () => void;
 
@@ -44,14 +44,20 @@ export abstract class MaterialImplementation {
   /** @internal */
   _setupUniformBuffer(device: GPUDevice, instanceCount: number): GPUBuffer {
     if (!this._uniformBuffer) {
-      this._uniformBuffer = MaterialImplementation._createUniformBuffer(device, instanceCount);
+      this._uniformBuffer = MaterialImplementation._createUniformBuffer(
+        device,
+        instanceCount,
+      );
     }
 
     return this._uniformBuffer;
   }
 
   /** @internal */
-  private static _createUniformBuffer(device: GPUDevice, instanceCount: number): GPUBuffer {
+  private static _createUniformBuffer(
+    device: GPUDevice,
+    instanceCount: number,
+  ): GPUBuffer {
     const matrixSize = 4 * 16; // 4x4 matrix
     const offset = 256; // uniformBindGroup offset must be 256-byte aligned
     const uniformBufferSize = offset * (instanceCount - 1) + matrixSize;
@@ -70,6 +76,10 @@ export abstract class MaterialImplementation {
   }
 
   /** @internal */
-  abstract _createUniformBindGroup(device: GPUDevice, renderPipeline: GPURenderPipeline, uniformBuffer: GPUBuffer, offset?: number): GPUBindGroup;
-
+  abstract _createUniformBindGroup(
+    device: GPUDevice,
+    renderPipeline: GPURenderPipeline,
+    uniformBuffer: GPUBuffer,
+    offset?: number,
+  ): GPUBindGroup;
 }

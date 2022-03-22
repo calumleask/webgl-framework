@@ -1,4 +1,3 @@
-
 export const texturedVertexSource = `#version 300 es
 
     in vec2 a_position;
