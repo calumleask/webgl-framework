@@ -45,7 +45,9 @@ export class TexturedMaterial extends Material {
           {
             // Transform
             binding: 0,
-            visibility: GPUShaderStage.VERTEX,
+            visibility: 0x1,
+            // FIX:
+            // visibility: GPUShaderStage.VERTEX,
             buffer: {
               type: 'uniform' as GPUBufferBindingType,
             },
@@ -53,7 +55,9 @@ export class TexturedMaterial extends Material {
           {
             // Sampler
             binding: 1,
-            visibility: GPUShaderStage.FRAGMENT,
+            visibility: 0x2,
+            // FIX:
+            // visibility: GPUShaderStage.FRAGMENT,
             sampler: {
               type: 'filtering' as GPUSamplerBindingType,
             },
@@ -61,7 +65,9 @@ export class TexturedMaterial extends Material {
           {
             // Texture view
             binding: 2,
-            visibility: GPUShaderStage.FRAGMENT,
+            visibility: 0x2,
+            // FIX:
+            // visibility: GPUShaderStage.FRAGMENT,
             texture: {
               sampleType: 'float' as GPUTextureSampleType,
             },
