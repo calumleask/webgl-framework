@@ -5,6 +5,14 @@ import * as examples from './examples';
 
 import './index.css';
 
+const snake = (str: string): string => {
+  return str.replace(/\s+/g, '-').toLowerCase();
+};
+
+const capitalizeEveryWord = (str: string): string => {
+  return str.replace(/(^\w|\s\w)/g, m => m.toUpperCase());
+};
+
 type ExampleWrapperProps = {
   title: string;
   Component: React.ComponentType;
@@ -53,34 +61,27 @@ const App: React.FC = () => {
                   <h4>{'2D'}</h4>
                   <Link to={'/webgl2/2d/colored-quad'}>{'Colored Quad'}</Link>
                   <h3>{'WebGPU'}</h3>
-                  <h4>{'Basic'}</h4>
-                  <Link to={'/webgpu/3d/basic/cube'}>{'Cube'}</Link>
-                  <Link to={'/webgpu/3d/basic/textured-cube'}>
-                    {'Textured Cube'}
-                  </Link>
-                  <Link to={'/webgpu/3d/basic/many-cubes'}>{'Many Cubes'}</Link>
-                  <h4>{'Transformations'}</h4>
-                  <Link
-                    to={'/webgpu/3d/transformations/rotating-around-local-axis'}
-                  >
-                    {'Rotating Around Local Axis'}
-                  </Link>
-                  <Link
-                    to={
-                      '/webgpu/3d/transformations/rotating-around-a-changing-axis'
-                    }
-                  >
-                    {'Rotating Around a Changing Axis'}
-                  </Link>
-                  <h4>{'Camera'}</h4>
-                  <Link to={'/webgpu/3d/camera/moving-camera'}>
-                    {'Moving Camera'}
-                  </Link>
-                  <Link
-                    to={'/webgpu/3d/camera/moving-camera-fixed-focal-point'}
-                  >
-                    {'Moving Camera (Fixed Focal Point)'}
-                  </Link>
+                  {Object.values(examples.webgpu)
+                    .sort((a, b) => {
+                      const category = a.category.localeCompare(b.category);
+                      if (category === 0) {
+                        return b.priority - a.priority;
+                      }
+                      return category;
+                    })
+                    .map(({ title, category, priority }, i) => (
+                      <>
+                        {priority === 0 && (
+                          <h4>{capitalizeEveryWord(category)}</h4>
+                        )}
+                        <Link
+                          key={i}
+                          to={'/webgpu/' + snake(category) + '/' + snake(title)}
+                        >
+                          {title}
+                        </Link>
+                      </>
+                    ))}
                 </div>
               </>
             }
@@ -98,69 +99,15 @@ const App: React.FC = () => {
           />
 
           {/*** WebGPU ***/}
-          {/* Basic */}
-          <Route
-            path={'/webgpu/3d/basic/cube'}
-            element={
-              <ExampleWrapper title={'Cube'} Component={examples.webgpu.Cube} />
-            }
-          />
-          <Route
-            path={'/webgpu/3d/basic/textured-cube'}
-            element={
-              <ExampleWrapper
-                title={'Textured Cube'}
-                Component={examples.webgpu.TexturedCube}
+          {Object.values(examples.webgpu).map(
+            ({ title, category, example }, i) => (
+              <Route
+                key={i}
+                path={'/webgpu/' + snake(category) + '/' + snake(title)}
+                element={<ExampleWrapper title={title} Component={example} />}
               />
-            }
-          />
-          <Route
-            path={'/webgpu/3d/basic/many-cubes'}
-            element={
-              <ExampleWrapper
-                title={'Many Cubes'}
-                Component={examples.webgpu.ManyCubes}
-              />
-            }
-          />
-          {/* Transformations */}
-          <Route
-            path={'/webgpu/3d/transformations/rotating-around-local-axis'}
-            element={
-              <ExampleWrapper
-                title={'Rotating Around Local Axis'}
-                Component={examples.webgpu.RotatingAroundLocalAxis}
-              />
-            }
-          />
-          <Route
-            path={'/webgpu/3d/transformations/rotating-around-a-changing-axis'}
-            element={
-              <ExampleWrapper
-                title={'Rotating Around a Changing Axis'}
-                Component={examples.webgpu.RotatingAroundAChangingAxis}
-              />
-            }
-          />
-          {/* Camera */}
-          <Route
-            path={'/webgpu/3d/camera/moving-camera'}
-            element={
-              <ExampleWrapper
-                title={'Moving Camera'}
-                Component={examples.webgpu.MovingCamera}
-              />
-            }
-          />
-          <Route
-            path={'/webgpu/3d/camera/moving-camera-fixed-focal-point'}
-            element={
-              <ExampleWrapper
-                title={'Moving Camera (Fixed Focal Point)'}
-                Component={examples.webgpu.MovingCameraFixedFocalPoint}
-              />
-            }
-          />
+            ),
+          )}
         </Routes>
       </Router>
     </div>
